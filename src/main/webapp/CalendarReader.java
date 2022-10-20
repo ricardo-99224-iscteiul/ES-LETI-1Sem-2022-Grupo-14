@@ -1,3 +1,4 @@
+package main.webapp;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,9 +15,9 @@ public class CalendarReader {
 	
 	
 
-	public static void main(String[] args) {
+	public void read(String webcal) {
 		
-		String webcal = "webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=aefcs@iscte.pt&password=v4m2d3fKKnQprqri84bKwiACNzkvW0wgeuKC1yBN1zqoMmqGrfX1eVVLZ1ZrAdkTJ7D9oaJ5ymumul522r7ItOQxTgOVhlhr7DhQyxmkHM7K7RoVqiaMlevpoLUwS6tI"; 
+//		String webcal = "webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=aefcs@iscte.pt&password=v4m2d3fKKnQprqri84bKwiACNzkvW0wgeuKC1yBN1zqoMmqGrfX1eVVLZ1ZrAdkTJ7D9oaJ5ymumul522r7ItOQxTgOVhlhr7DhQyxmkHM7K7RoVqiaMlevpoLUwS6tI"; 
 		String user = webcal.split("username=")[1];
 		user = user.split("@")[0];
 		
