@@ -51,6 +51,7 @@ public class CalendarReader {
 						summary += atualString;
 					}
 					summary = summary.split(" - ")[0];
+					summary = summary.split(":")[1];
 					
 					System.out.println(summary);
 					System.out.println("Starting timestamp: " + dateStart);
