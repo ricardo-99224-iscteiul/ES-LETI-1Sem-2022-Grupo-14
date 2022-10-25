@@ -27,8 +27,6 @@ public abstract class Calendar extends JComponent {
     static final int HEADER_HEIGHT = 30;
     static final int TIME_COL_WIDTH = 100;
 
-    // An estimate of the width of a single character (not exact but good
-    // enough)
     private static final int FONT_LETTER_PIXEL_WIDTH = 7;
     private ArrayList<CalendarEvent> events;
     private double timeScale;
@@ -41,7 +39,6 @@ public abstract class Calendar extends JComponent {
 
     Calendar(ArrayList<CalendarEvent> events) {
         this.events = events;
-//        setupTimer();
     }
     
     public void setStartTime(LocalTime ST_Time) {
@@ -80,14 +77,12 @@ public abstract class Calendar extends JComponent {
             height = MIN_HEIGHT;
         }
 
-        // Units are pixels per second
         timeScale = (double) (height - HEADER_HEIGHT) / (END_TIME.toSecondOfDay() - START_TIME.toSecondOfDay());
         dayWidth = (width - TIME_COL_WIDTH) / numDaysToShow();
     }
 
     protected abstract int numDaysToShow();
 
-    // Gives x val of left most pixel for day col
     protected abstract double dayToPixel(DayOfWeek dayOfWeek);
 
     private double timeToPixel(LocalTime time) {
@@ -99,14 +94,11 @@ public abstract class Calendar extends JComponent {
         calculateScaleVars();
         g2 = (Graphics2D) g;
 
-        // Rendering hints try to turn anti-aliasing on which improves quality
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Set background to white
         g2.setColor(Color.white);
         g2.fillRect(0, 0, getWidth(), getHeight());
 
-        // Set paint colour to black
         g2.setColor(Color.black);
 
         drawDayHeadings();
@@ -114,7 +106,6 @@ public abstract class Calendar extends JComponent {
         drawGrid();
         drawTimes();
         drawEvents();
-//        drawCurrentTimeLine();
     }
 
     protected abstract DayOfWeek getStartDay();
@@ -138,22 +129,19 @@ public abstract class Calendar extends JComponent {
     }
 
     private void drawGrid() {
-        // Save the original colour
+
         final Color ORIG_COLOUR = g2.getColor();
 
-        // Set colour to grey with half alpha (opacity)
         Color alphaGray = new Color(128, 128, 128, 128);
         Color alphaGrayLighter = new Color(200, 200, 200, 128);
         g2.setColor(alphaGray);
 
-        // Draw vertical grid lines
         double x;
         for (int i = getStartDay().getValue(); i <= getEndDay().getValue(); i++) {
             x = dayToPixel(DayOfWeek.of(i));
             g2.draw(new Line2D.Double(x, HEADER_HEIGHT, x, timeToPixel(END_TIME)));
         }
 
-        // Draw horizontal grid lines
         double y;
         int x1 = 0;
         for (LocalTime time = START_TIME; time.compareTo(END_TIME) <= 0; time = time.plusMinutes(30)) {
@@ -166,14 +154,12 @@ public abstract class Calendar extends JComponent {
             g2.draw(new Line2D.Double(x1, y, dayToPixel(getEndDay()) + dayWidth, y));
         }
 
-        // Reset the graphics context's colour
         g2.setColor(ORIG_COLOUR);
     }
 
     private void drawTodayShade() {
         LocalDate today = LocalDate.now();
 
-        // Check that date range being viewed is current date range
         if (!dateInRange(today)) return;
 
         final double x = dayToPixel(today.getDayOfWeek());
@@ -187,27 +173,6 @@ public abstract class Calendar extends JComponent {
         g2.fill(new Rectangle2D.Double(x, y, width, height));
         g2.setColor(origColor);
     }
-
-//    private void drawCurrentTimeLine() {
-//        LocalDate today = LocalDate.now();
-//
-//        // Check that date range being viewed is current date range
-//        if (!dateInRange(today)) return;
-//
-//        final double x0 = dayToPixel(today.getDayOfWeek());
-//        final double x1 = dayToPixel(today.getDayOfWeek()) + dayWidth;
-//        final double y = timeToPixel(LocalTime.now());
-//
-//        final Color origColor = g2.getColor();
-//        final Stroke origStroke = g2.getStroke();
-//
-//        g2.setColor(new Color(255, 127, 110));
-//        g2.setStroke(new BasicStroke(2));
-//        g2.draw(new Line2D.Double(x0, y, x1, y));
-//
-//        g2.setColor(origColor);
-//        g2.setStroke(origStroke);
-//    }
 
     private void drawTimes() {
         int y;
@@ -233,26 +198,19 @@ public abstract class Calendar extends JComponent {
             g2.fill(rect);
             g2.setColor(origColor);
 
-            // Draw time header
-
-            // Store the current font state
             Font origFont = g2.getFont();
 
             final float fontSize = origFont.getSize() - 1.6F;
 
-            // Create a new font with same properties but bold
             Font newFont = origFont.deriveFont(Font.BOLD, fontSize);
             g2.setFont(newFont);
 
             g2.drawString(event.getStart() + " - " + event.getEnd(), (int) x + 5, (int) y0 + 11);
 
-            // Unbolden
             g2.setFont(origFont.deriveFont(fontSize));
 
-            // Draw the event's text
             g2.drawString(event.getText(), (int) x + 5, (int) y0 + 23);
 
-            // Reset font
             g2.setFont(origFont);
         }
     }
@@ -260,12 +218,6 @@ public abstract class Calendar extends JComponent {
     protected double getDayWidth() {
         return dayWidth;
     }
-
-    // Repaints every minute to update the current time line
-//    private void setupTimer() {
-//        Timer timer = new Timer(1000*60, e -> repaint());
-//        timer.start();
-//    }
 
     protected abstract void setRangeToToday();
 

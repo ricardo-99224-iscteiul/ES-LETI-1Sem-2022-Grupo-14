@@ -8,7 +8,6 @@ public class Week {
 
     private ArrayList<LocalDate> days;
 
-    // Gets week variables from any date (can be within week)
     public Week(LocalDate date) {
         days = new ArrayList<>();
         LocalDate monday = getStartOfWeek(date);
@@ -27,7 +26,6 @@ public class Week {
     }
 
     public LocalDate getDay(DayOfWeek dayOfWeek) {
-        // DayOfWeek enum starts with monday == 1
         return days.get(dayOfWeek.getValue() - 1);
     }
 
