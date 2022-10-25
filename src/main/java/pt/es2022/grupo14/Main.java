@@ -1,14 +1,20 @@
 package pt.es2022.grupo14;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Main {
+	static JFrame frm = new JFrame();
     public static void main(String[] args) {
-        JFrame frm = new JFrame();
-
+    	
+    	frm.getContentPane().removeAll();
+		frm.repaint();
+    	
         ArrayList<CalendarEvent> events = new ArrayList<>();
         events.add(new CalendarEvent(LocalDate.of(2022, 11, 11), LocalTime.of(14, 0), LocalTime.of(15, 30), "Test 11/11 14:00-14:20"));
         
@@ -44,14 +50,25 @@ public class Main {
 
         JButton prevMonthBtn = new JButton("Previous Month");
         prevMonthBtn.addActionListener(e -> cal.prevMonth());
+        
+        JButton menuBtn = new JButton();
+        try {
+            Image img = ImageIO.read(Main.class.getResource("menu.png"));
+            img = img.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH ) ;
+            menuBtn.setIcon(new ImageIcon(img));
+            menuBtn.addActionListener(e -> initMenu());
+          } catch (Exception ex) {
+            System.out.println(ex);
+          }
 
         JPanel weekControls = new JPanel();
+        weekControls.add(menuBtn);
         weekControls.add(prevMonthBtn);
         weekControls.add(prevWeekBtn);
         weekControls.add(goToTodayBtn);
         weekControls.add(nextWeekBtn);
         weekControls.add(nextMonthBtn);
-
+        
         frm.add(weekControls, BorderLayout.NORTH);
 
         frm.add(cal, BorderLayout.CENTER);
@@ -59,4 +76,32 @@ public class Main {
         frm.setVisible(true);
         frm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
+    
+    public static void initMenu()
+	{
+		frm.getContentPane().removeAll();
+		frm.repaint();
+		
+		JPanel panel = new JPanel();
+		
+		JTextField webcalTextField = new JTextField();
+		webcalTextField.setSize(200, 24);
+		
+		CalendarReader reader = new CalendarReader();
+		
+		JButton webcalConfirm = new JButton("Enter");
+		webcalConfirm.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if (webcalTextField.getText().isBlank()) return;
+						
+						reader.read(webcalTextField.getText());
+					}
+				});
+		panel.add(webcalTextField);
+		panel.add(webcalConfirm);
+		
+		frm.add(panel);
+		
+		frm.revalidate();
+	}
 }
