@@ -32,6 +32,8 @@ public abstract class Calendar extends JComponent {
     private double timeScale;
     private double dayWidth;
     private Graphics2D g2;
+    
+    private boolean darkMode = false;
 
     public Calendar() {
         this(new ArrayList<>());
@@ -95,17 +97,31 @@ public abstract class Calendar extends JComponent {
         g2 = (Graphics2D) g;
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        g2.setColor(Color.white);
+        
+        if(darkMode) {
+        	g2.setColor(Color.black);
+        } else {
+        	g2.setColor(Color.white);
+        }
+        
         g2.fillRect(0, 0, getWidth(), getHeight());
-
-        g2.setColor(Color.black);
+        
+        if(darkMode) {
+            g2.setColor(Color.white);
+        } else {
+        	g2.setColor(Color.black);
+    	}
 
         drawDayHeadings();
         drawTodayShade();
         drawGrid();
         drawTimes();
         drawEvents();
+    }
+    
+    public void changeColor() {
+    	darkMode = !darkMode;
+    	repaint();
     }
 
     protected abstract DayOfWeek getStartDay();

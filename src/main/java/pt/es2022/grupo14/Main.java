@@ -1,19 +1,27 @@
 package pt.es2022.grupo14;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.plaf.metal.MetalToggleButtonUI;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Main {
 	static JFrame frm = new JFrame();
+	static boolean darkMode = true;
     public static void main(String[] args) {
     	
     	frm.getContentPane().removeAll();
 		frm.repaint();
+		
+		JPanel weekControls = new JPanel();
+		weekControls.setBackground(Color.lightGray);
     	
         ArrayList<CalendarEvent> events = new ArrayList<>();
         events.add(new CalendarEvent(LocalDate.of(2022, 11, 11), LocalTime.of(14, 0), LocalTime.of(15, 30), "Test 11/11 14:00-14:20"));
@@ -50,6 +58,20 @@ public class Main {
 
         JButton prevMonthBtn = new JButton("Previous Month");
         prevMonthBtn.addActionListener(e -> cal.prevMonth());
+       
+        JToggleButton mode = new JToggleButton("123");
+        mode.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				cal.changeColor();
+				if (darkMode)
+					weekControls.setBackground(Color.darkGray);
+				else weekControls.setBackground(Color.lightGray);
+				
+				darkMode = !darkMode;
+				frm.repaint();
+			}
+		});
         
         JButton menuBtn = new JButton();
         try {
@@ -61,13 +83,13 @@ public class Main {
             System.out.println(ex);
           }
 
-        JPanel weekControls = new JPanel();
         weekControls.add(menuBtn);
         weekControls.add(prevMonthBtn);
         weekControls.add(prevWeekBtn);
         weekControls.add(goToTodayBtn);
         weekControls.add(nextWeekBtn);
         weekControls.add(nextMonthBtn);
+        weekControls.add(mode);
         
         frm.add(weekControls, BorderLayout.NORTH);
 
