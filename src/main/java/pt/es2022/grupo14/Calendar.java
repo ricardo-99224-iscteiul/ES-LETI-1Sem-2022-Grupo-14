@@ -134,13 +134,24 @@ public abstract class Calendar extends JComponent {
         LocalDate day;
         DayOfWeek dayOfWeek;
 
-        for (int i = getStartDay().getValue(); i <= getEndDay().getValue(); i++) {
+        for (int i = 0; i <= getEndDay().getValue(); i++) {
+        	if (i != 0) {
             dayOfWeek = DayOfWeek.of(i);
             day = getDateFromDay(dayOfWeek);
 
-            String text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + day.getDayOfMonth() + "/" + day.getMonthValue();
+            String text = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
             x = (int) (dayToPixel(DayOfWeek.of(i)) + (dayWidth / 2) - (FONT_LETTER_PIXEL_WIDTH * text.length() / 2));
-            g2.drawString(text, x, y);
+            g2.drawString(text, x, y - 6);
+            
+            text = day.getDayOfMonth() + "/" + day.getMonthValue() + "/" + day.getYear();
+            x = (int) (dayToPixel(DayOfWeek.of(i)) + (dayWidth / 2) - (FONT_LETTER_PIXEL_WIDTH * text.length() / 2));
+            g2.drawString(text, x, y + 6);
+        	}
+        	else {
+                String text = "Hours/Days";
+                x = (int) (FONT_LETTER_PIXEL_WIDTH * text.length() / 2);
+                g2.drawString(text, x - 20, y);
+        	}
         }
     }
 
@@ -155,7 +166,7 @@ public abstract class Calendar extends JComponent {
         double x;
         for (int i = getStartDay().getValue(); i <= getEndDay().getValue(); i++) {
             x = dayToPixel(DayOfWeek.of(i));
-            g2.draw(new Line2D.Double(x, HEADER_HEIGHT, x, timeToPixel(END_TIME)));
+            g2.draw(new Line2D.Double(x, HEADER_HEIGHT - 30, x, timeToPixel(END_TIME)));
         }
 
         double y;

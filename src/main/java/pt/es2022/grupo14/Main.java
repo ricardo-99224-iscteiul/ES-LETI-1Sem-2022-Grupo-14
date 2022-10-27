@@ -21,7 +21,8 @@ public class Main {
 		frm.repaint();
 		
 		JPanel weekControls = new JPanel();
-		weekControls.setBackground(Color.lightGray);
+		Color alphaGray = new Color(200, 200, 200, 64);
+		weekControls.setBackground(alphaGray);
     	
         ArrayList<CalendarEvent> events = new ArrayList<>();
         events.add(new CalendarEvent(LocalDate.of(2022, 11, 11), LocalTime.of(14, 0), LocalTime.of(15, 30), "Test 11/11 14:00-14:20"));
@@ -66,7 +67,7 @@ public class Main {
 				cal.changeColor();
 				if (darkMode)
 					weekControls.setBackground(Color.darkGray);
-				else weekControls.setBackground(Color.lightGray);
+				else weekControls.setBackground(alphaGray);
 				
 				darkMode = !darkMode;
 				frm.repaint();
