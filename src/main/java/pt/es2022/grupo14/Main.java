@@ -8,13 +8,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Main {
 	static JFrame frm = new JFrame();
-	static boolean darkMode = true;
+	static boolean bDarkMode = true;
+    static Image lightMode = null;
+    static Image darkMode = null;
     public static void main(String[] args) {
     	
     	frm.getContentPane().removeAll();
@@ -59,24 +63,43 @@ public class Main {
 
         JButton prevMonthBtn = new JButton("Previous Month");
         prevMonthBtn.addActionListener(e -> cal.prevMonth());
+
+
+        try
+        {
+            lightMode = ImageIO.read(new File("./src/main/java/pt/es2022/grupo14/light_mode.png"));
+            lightMode = lightMode.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH );
+            darkMode = ImageIO.read(new File("./src/main/java/pt/es2022/grupo14/dark_mode.png"));
+            darkMode = darkMode.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH );
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
        
-        JToggleButton mode = new JToggleButton("123");
+        JToggleButton mode = new JToggleButton();
+        mode.setIcon(new ImageIcon(lightMode));
         mode.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
+                int state = e.getStateChange();
 				cal.changeColor();
-				if (darkMode)
-					weekControls.setBackground(Color.darkGray);
-				else weekControls.setBackground(alphaGray);
-				
-				darkMode = !darkMode;
+				if (state == ItemEvent.SELECTED)
+                {
+                    mode.setIcon(new ImageIcon(darkMode));
+                    weekControls.setBackground(Color.darkGray);
+                }
+				else
+                {
+                    mode.setIcon(new ImageIcon(lightMode));
+                    weekControls.setBackground(alphaGray);
+                }
 				frm.repaint();
 			}
 		});
         
         JButton menuBtn = new JButton();
         try {
-            Image img = ImageIO.read(Main.class.getResource("menu.png"));
+            Image img = ImageIO.read(new File("./src/main/java/pt/es2022/grupo14/menu.png"));
             img = img.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH ) ;
             menuBtn.setIcon(new ImageIcon(img));
             menuBtn.addActionListener(e -> initMenu());
