@@ -104,7 +104,7 @@ public class Main {
             menuBtn.setIcon(new ImageIcon(img));
             menuBtn.addActionListener(e -> initMenu());
           } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
           }
 
         weekControls.add(menuBtn);
@@ -131,7 +131,7 @@ public class Main {
 		JPanel panel = new JPanel();
 		
 		JTextField webcalTextField = new JTextField();
-		webcalTextField.setSize(200, 24);
+		webcalTextField.setPreferredSize(new Dimension(200, 24));
 		
 		CalendarReader reader = new CalendarReader();
 		

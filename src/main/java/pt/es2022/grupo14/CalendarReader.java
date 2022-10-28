@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
@@ -19,8 +20,10 @@ public class CalendarReader {
 
 	public void read(String webcal) {
 
-//		String webcal = "webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=aefcs@iscte.pt&password=v4m2d3fKKnQprqri84bKwiACNzkvW0wgeuKC1yBN1zqoMmqGrfX1eVVLZ1ZrAdkTJ7D9oaJ5ymumul522r7ItOQxTgOVhlhr7DhQyxmkHM7K7RoVqiaMlevpoLUwS6tI";
-//		String webcal = "webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=rdlpo@iscte.pt&password=YK69wQ5t4QT3bNCfs7ufNpAyUdaLkVzY8j2EHptfXtckXwGG2odZxl3fylYWZ7oFIZBuWjVfZ9ZYbOt8mmtjhu5cpKgEbGfZIQg2xZU4N5iq5FRbfGvEkVeUStqvOZ82";
+		if (webcal.isBlank()) throw new IllegalArgumentException();
+
+//		"webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=aefcs@iscte.pt&password=v4m2d3fKKnQprqri84bKwiACNzkvW0wgeuKC1yBN1zqoMmqGrfX1eVVLZ1ZrAdkTJ7D9oaJ5ymumul522r7ItOQxTgOVhlhr7DhQyxmkHM7K7RoVqiaMlevpoLUwS6tI";
+//		"webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=rdlpo@iscte.pt&password=YK69wQ5t4QT3bNCfs7ufNpAyUdaLkVzY8j2EHptfXtckXwGG2odZxl3fylYWZ7oFIZBuWjVfZ9ZYbOt8mmtjhu5cpKgEbGfZIQg2xZU4N5iq5FRbfGvEkVeUStqvOZ82";
 
 		String user = webcal.split("username=")[1];
 		user = user.split("@")[0];
@@ -43,9 +46,10 @@ public class CalendarReader {
 
 			webcal = webcal.replace("webcal", "https");
 			URL url = new URL(webcal);
-			Files.copy(url.openStream(), Paths.get("webcal.txt"), REPLACE_EXISTING);
+			Path webcalPath = Paths.get("src/calendars/webcal.txt");
+			Files.copy(url.openStream(), webcalPath, REPLACE_EXISTING);
 
-			Scanner scanner = new Scanner(new File("webcal.txt"));
+			Scanner scanner = new Scanner(new File(webcalPath.toUri()));
 
 			Map<String, List<String>> eventos = new TreeMap<>();
 			
@@ -62,8 +66,8 @@ public class CalendarReader {
 					horaStart = horaStart.split("Z")[0];
 
 					dateEnd = scanner.nextLine().split(":")[1];
-					dataEnd = dateStart.split("T")[0];
-					horaEnd = dateStart.split("T")[1];
+					dataEnd = dateEnd.split("T")[0];
+					horaEnd = dateEnd.split("T")[1];
 					horaEnd = horaEnd.split("Z")[0];
 
 					summary = scanner.nextLine();
@@ -97,6 +101,8 @@ public class CalendarReader {
 			}
 			
 			scanner.close();
+
+			//Files.deleteIfExists(webcalPath);
 
 			for (String cadeira : eventos.keySet()) {
 
