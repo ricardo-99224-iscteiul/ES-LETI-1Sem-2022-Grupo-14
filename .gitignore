@@ -1,0 +1,7 @@
+/src/test/
+/target/
+/.idea/
+/src/calendars/aefcs.json
+/src/calendars/rdlpo.json
+/src/calendars/webcal.txt
+/.idea/compiler.xml
