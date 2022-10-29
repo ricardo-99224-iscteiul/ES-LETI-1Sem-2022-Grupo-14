@@ -27,6 +27,15 @@ public class Main {
 		JPanel weekControls = new JPanel();
 		Color alphaGray = new Color(200, 200, 200, 64);
 		weekControls.setBackground(alphaGray);
+		
+		JPanel calControls = new JPanel();
+		calControls.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		//calControls.setLayout(new BoxLayout(calControls, BoxLayout.Y_AXIS));
+		
+		calControls.setBackground(alphaGray);
     	
         ArrayList<CalendarEvent> events = new ArrayList<>();
         events.add(new CalendarEvent(LocalDate.of(2022, 11, 11), LocalTime.of(14, 0), LocalTime.of(15, 30), "Test 11/11 14:00-14:20"));
@@ -64,15 +73,12 @@ public class Main {
         JButton prevMonthBtn = new JButton("Previous Month");
         prevMonthBtn.addActionListener(e -> cal.prevMonth());
 
-
-        try
-        {
+        try {
             lightMode = ImageIO.read(new File("./src/main/java/pt/es2022/grupo14/light_mode.png"));
             lightMode = lightMode.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH );
             darkMode = ImageIO.read(new File("./src/main/java/pt/es2022/grupo14/dark_mode.png"));
             darkMode = darkMode.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH );
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
        
@@ -83,15 +89,14 @@ public class Main {
 			public void itemStateChanged(ItemEvent e) {
                 int state = e.getStateChange();
 				cal.changeColor();
-				if (state == ItemEvent.SELECTED)
-                {
+				if(state == ItemEvent.SELECTED) {
                     mode.setIcon(new ImageIcon(darkMode));
                     weekControls.setBackground(Color.darkGray);
-                }
-				else
-                {
+                    calControls.setBackground(Color.darkGray);
+                } else {
                     mode.setIcon(new ImageIcon(lightMode));
                     weekControls.setBackground(alphaGray);
+                    calControls.setBackground(alphaGray);
                 }
 				frm.repaint();
 			}
@@ -103,9 +108,19 @@ public class Main {
             img = img.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH ) ;
             menuBtn.setIcon(new ImageIcon(img));
             menuBtn.addActionListener(e -> initMenu());
-          } catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-          }
+        }
+        
+        JCheckBox afonso = new JCheckBox("Afonso");
+        
+        
+        JCheckBox ricardo = new JCheckBox("Ricardo");
+        
+        
+        JCheckBox rui = new JCheckBox("Rui");
+        
+        
 
         weekControls.add(menuBtn);
         weekControls.add(prevMonthBtn);
@@ -115,7 +130,13 @@ public class Main {
         weekControls.add(nextMonthBtn);
         weekControls.add(mode);
         
+        calControls.add(afonso, gbc);
+        calControls.add(ricardo, gbc);
+        calControls.add(rui, gbc);
+        
         frm.add(weekControls, BorderLayout.NORTH);
+        
+        frm.add(calControls, BorderLayout.EAST);
 
         frm.add(cal, BorderLayout.CENTER);
         frm.setSize(1000, 900);
