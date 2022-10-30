@@ -13,17 +13,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class CalendarReader {
 
+	String webcalRegex = "webcal://fenix\\.iscte-iul\\.pt/publico/publicPersonICalendar\\.do\\?method=iCalendar&username=" +
+			"\\p{Lower}{5}" + "@iscte\\.pt&password=" + "\\p{Alnum}+";
+	Pattern webcalCheck = Pattern.compile(webcalRegex);
+
 	public void read(String webcal) {
 
 		if (webcal.isBlank()) throw new IllegalArgumentException();
 
-//		"webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=aefcs@iscte.pt&password=v4m2d3fKKnQprqri84bKwiACNzkvW0wgeuKC1yBN1zqoMmqGrfX1eVVLZ1ZrAdkTJ7D9oaJ5ymumul522r7ItOQxTgOVhlhr7DhQyxmkHM7K7RoVqiaMlevpoLUwS6tI";
-//		"webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=rdlpo@iscte.pt&password=YK69wQ5t4QT3bNCfs7ufNpAyUdaLkVzY8j2EHptfXtckXwGG2odZxl3fylYWZ7oFIZBuWjVfZ9ZYbOt8mmtjhu5cpKgEbGfZIQg2xZU4N5iq5FRbfGvEkVeUStqvOZ82";
+		if (!webcalCheck.matcher(webcal).find()) throw new IllegalArgumentException();
+
+//		webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=aefcs@iscte.pt&password=v4m2d3fKKnQprqri84bKwiACNzkvW0wgeuKC1yBN1zqoMmqGrfX1eVVLZ1ZrAdkTJ7D9oaJ5ymumul522r7ItOQxTgOVhlhr7DhQyxmkHM7K7RoVqiaMlevpoLUwS6tI
+//		webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=rdlpo@iscte.pt&password=YK69wQ5t4QT3bNCfs7ufNpAyUdaLkVzY8j2EHptfXtckXwGG2odZxl3fylYWZ7oFIZBuWjVfZ9ZYbOt8mmtjhu5cpKgEbGfZIQg2xZU4N5iq5FRbfGvEkVeUStqvOZ82
+//		webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=racjs@iscte.pt&password=bxhMVmPYnfTT17Zo3OyArS5GH3FNlOFj5I4phrZYrfwXTfoUE6N8POymWoRFBljJrK6XdnajVKiUw2P9BaiPMLNU0oDacMLENSI8USO1TIZUEPfbZ3JpCZQKhUAyJXhS
 
 		String user = webcal.split("username=")[1];
 		user = user.split("@")[0];
@@ -46,7 +54,7 @@ public class CalendarReader {
 
 			webcal = webcal.replace("webcal", "https");
 			URL url = new URL(webcal);
-			Path webcalPath = Paths.get("src/calendars/webcal.txt");
+			Path webcalPath = Paths.get(Utils.WEBCAL);
 			Files.copy(url.openStream(), webcalPath, REPLACE_EXISTING);
 
 			Scanner scanner = new Scanner(new File(webcalPath.toUri()));
@@ -102,7 +110,7 @@ public class CalendarReader {
 			
 			scanner.close();
 
-			//Files.deleteIfExists(webcalPath);
+			Files.deleteIfExists(webcalPath);
 
 			for (String cadeira : eventos.keySet()) {
 

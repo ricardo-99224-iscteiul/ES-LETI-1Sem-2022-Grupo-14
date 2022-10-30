@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static pt.es2022.grupo14.Utils.alphaGray;
+
 public class MenuScreen
 {
     JFrame frm;
@@ -16,6 +18,15 @@ public class MenuScreen
 
         JPanel panel = new JPanel();
 
+        if (Main.darkMode)
+        {
+            panel.setBackground(Color.DARK_GRAY);
+        }
+        else
+        {
+            panel.setBackground(alphaGray);
+        }
+
         JTextField webcalTextField = new JTextField();
         webcalTextField.setPreferredSize(new Dimension(200, 24));
 
@@ -26,7 +37,16 @@ public class MenuScreen
             public void actionPerformed(ActionEvent e) {
                 if (webcalTextField.getText().isBlank()) return;
 
-                reader.read(webcalTextField.getText());
+                try
+                {
+                    reader.read(webcalTextField.getText());
+                }
+                catch (IllegalArgumentException exception)
+                {
+                    exception.printStackTrace();
+                }
+
+                Main.changeScreen(Screen.CALENDAR);
             }
         });
         panel.add(webcalTextField);

@@ -1,7 +1,6 @@
 /src/test/
 /target/
 /.idea/
-/src/calendars/aefcs.json
-/src/calendars/rdlpo.json
-/src/calendars/webcal.txt
+/src/calendars/
 /.idea/compiler.xml
+/ES-LETI-1Sem-2022-Grupo-14.iml

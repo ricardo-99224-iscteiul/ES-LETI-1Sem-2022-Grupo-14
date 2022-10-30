@@ -4,9 +4,10 @@ import javax.swing.*;
 
 public class Main
 {
-	static JFrame frm = getFrm();
-    static CalendarScreen calendarScreen = new CalendarScreen();
-    static MenuScreen menuScreen = new MenuScreen();
+	private static JFrame frm = getFrm();
+    private static CalendarScreen calendarScreen = new CalendarScreen();
+    private static MenuScreen menuScreen = new MenuScreen();
+    public static boolean darkMode = true;
 
     public static void main(String[] args) {
         frm.setVisible(true);

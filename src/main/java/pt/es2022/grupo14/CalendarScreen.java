@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static pt.es2022.grupo14.Utils.alphaGray;
 
 public class CalendarScreen
 {
@@ -16,7 +19,8 @@ public class CalendarScreen
     Image lightMode = null;
     Image darkMode = null;
     ArrayList<CalendarEvent> events = new ArrayList<>();
-
+    HashMap<String, Boolean> checkboxes = new HashMap<>();
+    WeekCalendar cal = null;
     public void showCalendar()
     {
         boolean bDarkMode = true;
@@ -25,11 +29,7 @@ public class CalendarScreen
         frm.getContentPane().removeAll();
         frm.repaint();
 
-        JPanel panel = new JPanel();
-
         JPanel weekControls = new JPanel();
-        Color alphaGray = new Color(200, 200, 200, 64);
-        weekControls.setBackground(alphaGray);
 
         JPanel calControls = new JPanel();
         calControls.setLayout(new GridBagLayout());
@@ -47,16 +47,29 @@ public class CalendarScreen
 
         for (String username : calendarNames)
         {
-            try
+            JCheckBox b = new JCheckBox(username);
+            if (checkboxes.containsKey(b.getText()))
+                b.setSelected(checkboxes.get(b.getText()));
+            else
             {
-                addEventsToCal(parser.getAllEvents(username));
-            } catch (IOException e)
-            {
-                throw new RuntimeException(e);
+                checkboxes.put(b.getText(), b.isSelected());
             }
+            b.addItemListener(new ItemListener() {
+
+                @Override
+                public void itemStateChanged(ItemEvent itemEvent)
+                {
+                    checkboxes.put(b.getText(), b.isSelected());
+                    //Main.changeScreen(Screen.CALENDAR);
+                    updateEvents();
+                    cal.setEvents(events);
+                }
+            });
+
+            calControls.add(b, gbc);
         }
-        
-        //addEventsToCal(new CalendarEvent(LocalDate.of(2022, 11, 11), LocalTime.of(14, 0), LocalTime.of(15, 30), "Test 11/11 14:00-14:20"));
+
+        updateEvents();
 
         LocalTime earlier = LocalTime.MAX;
         LocalTime later = LocalTime.MIN;
@@ -71,10 +84,7 @@ public class CalendarScreen
             }
         }
 
-        WeekCalendar cal = new WeekCalendar(events);
-
-//        cal.setStartTime(earlier);
-//        cal.setEndTime(later);
+        cal = new WeekCalendar(events);
 
         JButton goToTodayBtn = new JButton("Today");
         goToTodayBtn.addActionListener(e -> cal.goToToday());
@@ -104,7 +114,19 @@ public class CalendarScreen
         }
 
         JToggleButton mode = new JToggleButton();
-        mode.setIcon(new ImageIcon(lightMode));
+        if (Main.darkMode)
+        {
+            weekControls.setBackground(Color.darkGray);
+            mode.setIcon(new ImageIcon(darkMode));
+            mode.setSelected(true);
+            cal.changeColor();
+        }
+        else
+        {
+            weekControls.setBackground(alphaGray);
+            mode.setIcon(new ImageIcon(lightMode));
+            mode.setSelected(false);
+        }
         mode.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -114,9 +136,11 @@ public class CalendarScreen
                 {
                     mode.setIcon(new ImageIcon(darkMode));
                     weekControls.setBackground(Color.darkGray);
+                    Main.darkMode = true;
                 }
                 else
                 {
+                    Main.darkMode = false;
                     mode.setIcon(new ImageIcon(lightMode));
                     weekControls.setBackground(alphaGray);
                 }
@@ -126,21 +150,13 @@ public class CalendarScreen
 
         JButton menuBtn = new JButton();
         try {
-            Image img = ImageIO.read(new File("./src/main/java/pt/es2022/grupo14/menu.png"));
+            Image img = ImageIO.read(new File(Utils.MENU));
             img = img.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH ) ;
             menuBtn.setIcon(new ImageIcon(img));
             menuBtn.addActionListener(e -> Main.changeScreen(Screen.MENU));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-        JCheckBox afonso = new JCheckBox("Afonso");
-
-
-        JCheckBox ricardo = new JCheckBox("Ricardo");
-
-
-        JCheckBox rui = new JCheckBox("Rui");
 
         weekControls.add(menuBtn);
         weekControls.add(prevMonthBtn);
@@ -149,10 +165,6 @@ public class CalendarScreen
         weekControls.add(nextWeekBtn);
         weekControls.add(nextMonthBtn);
         weekControls.add(mode);
-
-        calControls.add(afonso, gbc);
-        calControls.add(ricardo, gbc);
-        calControls.add(rui, gbc);
 
         frm.add(weekControls, BorderLayout.NORTH);
 
@@ -176,5 +188,32 @@ public class CalendarScreen
         if (clear)
             this.events =  events;
         else addEventsToCal(events);
+    }
+
+    public void updateEvents()
+    {
+        events = new ArrayList<>();
+
+        Utils utils = new Utils();
+        JSONParser parser = new JSONParser();
+
+        ArrayList<String> calendarNames = utils.getCalendars();
+
+        for (String username : calendarNames)
+        {
+            for (String name : checkboxes.keySet())
+            {
+                if (checkboxes.get(name) && name.equals(username))
+                {
+                    try
+                    {
+                        addEventsToCal(parser.getAllEvents(username));
+                    } catch (IOException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
     }
 }

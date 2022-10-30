@@ -101,14 +101,6 @@ public class JSONConverter
 
     public void closeFile(String username) throws IOException
     {
-        /*Path webcalPath = Paths.get("src/calendars/" + username + ".json");
-        File jsonFile = new File(webcalPath.toUri());
-
-        FileWriter fw = new FileWriter(jsonFile, true);
-
-        fw.write("}");
-
-        fw.close();*/
         Path webcalPath = Paths.get("src/calendars/" + username + ".json");
         File jsonFile = new File(webcalPath.toUri());
 
