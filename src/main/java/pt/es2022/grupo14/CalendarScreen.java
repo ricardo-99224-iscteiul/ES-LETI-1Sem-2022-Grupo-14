@@ -31,6 +31,15 @@ public class CalendarScreen
         Color alphaGray = new Color(200, 200, 200, 64);
         weekControls.setBackground(alphaGray);
 
+        JPanel calControls = new JPanel();
+        calControls.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        //calControls.setLayout(new BoxLayout(calControls, BoxLayout.Y_AXIS));
+
+        calControls.setBackground(alphaGray);
+
         Utils utils = new Utils();
         JSONParser parser = new JSONParser();
 
@@ -125,6 +134,14 @@ public class CalendarScreen
             ex.printStackTrace();
         }
 
+        JCheckBox afonso = new JCheckBox("Afonso");
+
+
+        JCheckBox ricardo = new JCheckBox("Ricardo");
+
+
+        JCheckBox rui = new JCheckBox("Rui");
+
         weekControls.add(menuBtn);
         weekControls.add(prevMonthBtn);
         weekControls.add(prevWeekBtn);
@@ -133,7 +150,14 @@ public class CalendarScreen
         weekControls.add(nextMonthBtn);
         weekControls.add(mode);
 
+        calControls.add(afonso, gbc);
+        calControls.add(ricardo, gbc);
+        calControls.add(rui, gbc);
+
         frm.add(weekControls, BorderLayout.NORTH);
+
+        frm.add(calControls, BorderLayout.EAST);
+
         frm.add(cal, BorderLayout.CENTER);
 
         frm.revalidate();
