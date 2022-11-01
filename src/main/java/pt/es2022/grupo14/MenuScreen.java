@@ -2,8 +2,6 @@ package pt.es2022.grupo14;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import static pt.es2022.grupo14.Utils.alphaGray;
 
@@ -33,21 +31,20 @@ public class MenuScreen
         CalendarReader reader = new CalendarReader();
 
         JButton webcalConfirm = new JButton("Enter");
-        webcalConfirm.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (webcalTextField.getText().isBlank()) return;
+        webcalConfirm.addActionListener(e ->
+        {
+            if (webcalTextField.getText().isBlank()) return;
 
-                try
-                {
-                    reader.read(webcalTextField.getText());
-                }
-                catch (IllegalArgumentException exception)
-                {
-                    exception.printStackTrace();
-                }
-
-                Main.changeScreen(Screen.CALENDAR);
+            try
+            {
+                reader.read(webcalTextField.getText());
             }
+            catch (IllegalArgumentException exception)
+            {
+                exception.printStackTrace();
+            }
+
+            Main.changeScreen(Screen.CALENDAR);
         });
         panel.add(webcalTextField);
         panel.add(webcalConfirm);

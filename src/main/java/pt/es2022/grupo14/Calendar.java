@@ -22,7 +22,7 @@ public abstract class Calendar extends JComponent {
     static LocalTime END_TIME = LocalTime.of(22, 30);
 
     static final int MIN_WIDTH = 600;
-    static final int MIN_HEIGHT = MIN_WIDTH;
+    static final int MIN_HEIGHT = 600;
 
     static final int HEADER_HEIGHT = 30;
     static final int TIME_COL_WIDTH = 100;
@@ -35,23 +35,23 @@ public abstract class Calendar extends JComponent {
     
     private boolean darkMode = false;
 
-    public Calendar() {
+    /*public Calendar() {
         this(new ArrayList<>());
-    }
+    }*/
 
     Calendar(ArrayList<CalendarEvent> events) {
         this.events = events;
     }
     
-    public void setStartTime(LocalTime ST_Time) {
+    /*public void setStartTime(LocalTime ST_Time) {
     	START_TIME = ST_Time;
-    }
+    }*/
     
-    public void setEndTime(LocalTime END_Time) {
+    /*public void setEndTime(LocalTime END_Time) {
     	END_TIME = END_Time;
-    }
+    }*/
 
-    public static LocalTime roundTime(LocalTime time, int minutes) {
+    /*public static LocalTime roundTime(LocalTime time, int minutes) {
         LocalTime t = time;
 
         if (t.getMinute() % minutes > minutes / 2) {
@@ -61,7 +61,7 @@ public abstract class Calendar extends JComponent {
         }
 
         return t;
-    }
+    }*/
 
     protected abstract boolean dateInRange(LocalDate date);
 
@@ -80,7 +80,7 @@ public abstract class Calendar extends JComponent {
         }
 
         timeScale = (double) (height - HEADER_HEIGHT) / (END_TIME.toSecondOfDay() - START_TIME.toSecondOfDay());
-        dayWidth = (width - TIME_COL_WIDTH) / numDaysToShow();
+        dayWidth = (width - TIME_COL_WIDTH) / (double) numDaysToShow();
     }
 
     protected abstract int numDaysToShow();
@@ -105,7 +105,7 @@ public abstract class Calendar extends JComponent {
         }
         
         g2.fillRect(0, 0, getWidth(), getHeight());
-        
+
         if(darkMode) {
             g2.setColor(Color.white);
         } else {
@@ -116,6 +116,8 @@ public abstract class Calendar extends JComponent {
         drawTodayShade();
         drawGrid();
         drawTimes();
+
+        g2.setColor(Color.black);
         drawEvents();
     }
     
@@ -149,7 +151,7 @@ public abstract class Calendar extends JComponent {
         	}
         	else {
                 String text = "Hours/Days";
-                x = (int) (FONT_LETTER_PIXEL_WIDTH * text.length() / 2);
+                x = FONT_LETTER_PIXEL_WIDTH * text.length() / 2;
                 g2.drawString(text, x - 20, y);
         	}
         }
@@ -205,7 +207,7 @@ public abstract class Calendar extends JComponent {
         int y;
         for (LocalTime time = START_TIME; time.compareTo(END_TIME) <= 0; time = time.plusMinutes(30)) {
             y = (int) timeToPixel(time) + 25;
-            g2.drawString((time.toString() + "-" + time.plusMinutes(30).toString()), TIME_COL_WIDTH - (FONT_LETTER_PIXEL_WIDTH * time.toString().length()) - 50, y);
+            g2.drawString((time + "-" + time.plusMinutes(30).toString()), TIME_COL_WIDTH - (FONT_LETTER_PIXEL_WIDTH * time.toString().length()) - 50, y);
         }
     }
 
@@ -236,10 +238,36 @@ public abstract class Calendar extends JComponent {
 
             g2.setFont(origFont.deriveFont(fontSize));
 
-            g2.drawString(event.getText(), (int) x + 5, (int) y0 + 23);
+            String text = event.getText();
+
+            for (int i = 0; i < 10; i++)
+            {
+                int toCut = cutString(text);
+                String toPrint = text.substring(0, toCut);
+                g2.drawString(toPrint, (int) x + 5, (int) y0 + 23 + 11*i);
+
+                if (toCut == 0) break;
+
+                text = text.substring(toCut).strip();
+            }
 
             g2.setFont(origFont);
         }
+    }
+
+    private int cutString(String text)
+    {
+        String lastString = "";
+        for (String cut : text.split(" "))
+        {
+            if (g2.getFontMetrics().stringWidth((lastString +  " " + cut)) < dayWidth)
+            {
+                lastString += " " + cut;
+            }
+            else break;
+        }
+
+        return lastString.length() - 1;
     }
 
     protected double getDayWidth() {
@@ -253,16 +281,16 @@ public abstract class Calendar extends JComponent {
         repaint();
     }
 
-    public void addEvent(CalendarEvent event) {
+    /*public void addEvent(CalendarEvent event) {
         events.add(event);
         repaint();
-    }
+    }*/
 
-    public boolean removeEvent(CalendarEvent event) {
+    /*public boolean removeEvent(CalendarEvent event) {
         boolean removed = events.remove(event);
         repaint();
         return removed;
-    }
+    }*/
 
     public void setEvents(ArrayList<CalendarEvent> events) {
         this.events = events;

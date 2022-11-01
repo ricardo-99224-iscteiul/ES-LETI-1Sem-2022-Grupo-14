@@ -14,6 +14,10 @@ public class Utils
     public static final String MENU = "./src/main/java/pt/es2022/grupo14/menu.png";
     public static final Color alphaGray = new Color(200, 200, 200, 64);
 
+    public static final Color LIGHT_RED = new Color(253, 49, 49);
+    public static final Color RED = new Color(211, 25, 25);
+    public static final Color DARK_RED = new Color(194, 13, 13);
+
     public ArrayList<String> getCalendars()
     {
         File calendarFolder = new File(CALENDARS);

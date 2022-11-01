@@ -39,16 +39,4 @@ public class Week {
         return new Week(monday.minusDays(3));
     }
 
-    public String toString() {
-        return "Week of the " + getDay(DayOfWeek.MONDAY);
-    }
-
-    public static void main(String[] args) {
-        LocalDate now = LocalDate.now();
-        Week currentWeek = new Week(now);
-        System.out.println(currentWeek);
-        System.out.println(currentWeek.prevWeek());
-        System.out.println(currentWeek.nextWeek());
-    }
-
 }

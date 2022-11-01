@@ -4,10 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,7 +21,7 @@ public class CalendarScreen
     WeekCalendar cal = null;
     public void showCalendar()
     {
-        boolean bDarkMode = true;
+        //boolean bDarkMode = true;
 
         frm = Main.getFrm();
         frm.getContentPane().removeAll();
@@ -41,7 +39,7 @@ public class CalendarScreen
         calControls.setBackground(alphaGray);
 
         Utils utils = new Utils();
-        JSONParser parser = new JSONParser();
+        //JSONParser parser = new JSONParser();
 
         ArrayList<String> calendarNames = utils.getCalendars();
 
@@ -54,16 +52,12 @@ public class CalendarScreen
             {
                 checkboxes.put(b.getText(), b.isSelected());
             }
-            b.addItemListener(new ItemListener() {
-
-                @Override
-                public void itemStateChanged(ItemEvent itemEvent)
-                {
-                    checkboxes.put(b.getText(), b.isSelected());
-                    //Main.changeScreen(Screen.CALENDAR);
-                    updateEvents();
-                    cal.setEvents(events);
-                }
+            b.addItemListener(itemEvent ->
+            {
+                checkboxes.put(b.getText(), b.isSelected());
+                //Main.changeScreen(Screen.CALENDAR);
+                updateEvents();
+                cal.setEvents(events);
             });
 
             calControls.add(b, gbc);
@@ -71,18 +65,21 @@ public class CalendarScreen
 
         updateEvents();
 
-        LocalTime earlier = LocalTime.MAX;
+        /*LocalTime earlier = LocalTime.MAX;
         LocalTime later = LocalTime.MIN;
 
-        for (int i = 0; i < events.size(); i++) {
-            if (events.get(i).getStart().compareTo(earlier) < 0) {
-                earlier = events.get(i).getStart();
+        for (CalendarEvent event : events)
+        {
+            if (event.getStart().compareTo(earlier) < 0)
+            {
+                earlier = event.getStart();
             }
 
-            if (events.get(i).getEnd().compareTo(later) < 0) {
-                earlier = events.get(i).getEnd();
+            if (event.getEnd().compareTo(later) < 0)
+            {
+                earlier = event.getEnd();
             }
-        }
+        }*/
 
         cal = new WeekCalendar(events);
 
@@ -127,25 +124,23 @@ public class CalendarScreen
             mode.setIcon(new ImageIcon(lightMode));
             mode.setSelected(false);
         }
-        mode.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int state = e.getStateChange();
-                cal.changeColor();
-                if (state == ItemEvent.SELECTED)
-                {
-                    mode.setIcon(new ImageIcon(darkMode));
-                    weekControls.setBackground(Color.darkGray);
-                    Main.darkMode = true;
-                }
-                else
-                {
-                    Main.darkMode = false;
-                    mode.setIcon(new ImageIcon(lightMode));
-                    weekControls.setBackground(alphaGray);
-                }
-                frm.repaint();
+        mode.addItemListener(e ->
+        {
+            int state = e.getStateChange();
+            cal.changeColor();
+            if (state == ItemEvent.SELECTED)
+            {
+                mode.setIcon(new ImageIcon(darkMode));
+                weekControls.setBackground(Color.darkGray);
+                Main.darkMode = true;
             }
+            else
+            {
+                Main.darkMode = false;
+                mode.setIcon(new ImageIcon(lightMode));
+                weekControls.setBackground(alphaGray);
+            }
+            frm.repaint();
         });
 
         JButton menuBtn = new JButton();
@@ -176,18 +171,12 @@ public class CalendarScreen
         frm.repaint();
     }
 
-    public void addEventsToCal(CalendarEvent event) {
+    /*public void addEventsToCal(CalendarEvent event) {
         events.add(event);
-    }
+    }*/
 
     public void addEventsToCal(ArrayList<CalendarEvent> events) {
         this.events.addAll(events);
-    }
-
-    public void addEventsToCal(ArrayList<CalendarEvent> events, boolean clear) {
-        if (clear)
-            this.events =  events;
-        else addEventsToCal(events);
     }
 
     public void updateEvents()
@@ -207,7 +196,8 @@ public class CalendarScreen
                 {
                     try
                     {
-                        addEventsToCal(parser.getAllEvents(username));
+                        ArrayList<CalendarEvent> additions = changeColor(parser.getAllEvents(username));
+                        addEventsToCal(additions);
                     } catch (IOException e)
                     {
                         throw new RuntimeException(e);
@@ -215,5 +205,26 @@ public class CalendarScreen
                 }
             }
         }
+    }
+
+    private ArrayList<CalendarEvent> changeColor(ArrayList<CalendarEvent> newEvents)
+    {
+        ArrayList<CalendarEvent> additions = new ArrayList<>();
+        for (CalendarEvent event : newEvents)
+        {
+            int index = events.indexOf(event);
+            if (index != -1)
+            {
+                Color cur = events.get(index).getColor();
+                if (cur.equals(Utils.LIGHT_RED))
+                    cur = Utils.RED;
+                else if (cur.equals(Utils.RED))
+                    cur = Utils.DARK_RED;
+
+                events.get(index).setColor(cur);
+            }
+            else additions.add(event);
+        }
+        return additions;
     }
 }

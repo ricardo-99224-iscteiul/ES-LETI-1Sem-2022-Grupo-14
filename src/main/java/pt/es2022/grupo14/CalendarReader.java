@@ -6,6 +6,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.Scanner;
 
 import java.util.TreeMap;
@@ -55,6 +56,9 @@ public class CalendarReader {
 			webcal = webcal.replace("webcal", "https");
 			URL url = new URL(webcal);
 			Path webcalPath = Paths.get(Utils.WEBCAL);
+			Path calendarFolder = Paths.get(Utils.CALENDARS);
+			if (!Files.exists(calendarFolder))
+				Files.createDirectory(calendarFolder);
 			Files.copy(url.openStream(), webcalPath, REPLACE_EXISTING);
 
 			Scanner scanner = new Scanner(new File(webcalPath.toUri()));

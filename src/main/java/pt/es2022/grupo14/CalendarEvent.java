@@ -30,40 +30,44 @@ public class CalendarEvent {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    /*public void setDate(LocalDate date) {
         this.date = date;
-    }
+    }*/
 
     public LocalTime getStart() {
         return start;
     }
 
-    public void setStart(LocalTime start) {
+    /*public void setStart(LocalTime start) {
         this.start = start;
-    }
+    }*/
 
     public LocalTime getEnd() {
         return end;
     }
 
-    public void setEnd(LocalTime end) {
+    /*public void setEnd(LocalTime end) {
         this.end = end;
-    }
+    }*/
 
     public String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    /*public void setText(String text) {
         this.text = text;
-    }
+    }*/
 
-    public String toString() {
+    /*public String toString() {
         return getDate() + " " + getStart() + "-" + getEnd() + ". " + getText();
-    }
+    }*/
 
     public Color getColor() {
         return color;
+    }
+
+    public void setColor(Color newColor) {
+        color = newColor;
     }
 
     @Override
@@ -79,11 +83,11 @@ public class CalendarEvent {
 
     }
 
-    @Override
+    /*@Override
     public int hashCode() {
         int result = date.hashCode();
         result = 31 * result + start.hashCode();
         result = 31 * result + end.hashCode();
         return result;
-    }
+    }*/
 }

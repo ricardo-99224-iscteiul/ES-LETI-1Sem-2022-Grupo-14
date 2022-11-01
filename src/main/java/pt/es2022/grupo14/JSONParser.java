@@ -68,7 +68,11 @@ public class JSONParser
                     endTimeHour += 1;
                 }
 
-                events.add(new CalendarEvent(LocalDate.of(year, month, day), LocalTime.of(startTimeHour, startTimeMin), LocalTime.of(endTimeHour, endTimeMin), name));
+                events.add(new CalendarEvent(LocalDate.of(year, month, day),
+                        LocalTime.of(startTimeHour, startTimeMin),
+                        LocalTime.of(endTimeHour, endTimeMin),
+                        name,
+                        Utils.LIGHT_RED));
             }
         }
 
