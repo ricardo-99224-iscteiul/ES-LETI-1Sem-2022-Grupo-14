@@ -72,7 +72,7 @@ public class JSONParser
                         LocalTime.of(startTimeHour, startTimeMin),
                         LocalTime.of(endTimeHour, endTimeMin),
                         name,
-                        Utils.LIGHT_RED));
+                        Utils.LIGHT_COLOR));
             }
         }
 

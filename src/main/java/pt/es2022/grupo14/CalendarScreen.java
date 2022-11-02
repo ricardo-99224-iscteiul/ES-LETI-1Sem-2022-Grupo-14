@@ -218,10 +218,10 @@ public class CalendarScreen
             if (index != -1)
             {
                 Color cur = events.get(index).getColor();
-                if (cur.equals(Utils.LIGHT_RED))
-                    cur = Utils.RED;
-                else if (cur.equals(Utils.RED))
-                    cur = Utils.DARK_RED;
+                if (cur.equals(Utils.LIGHT_COLOR))
+                    cur = Utils.COLOR;
+                else if (cur.equals(Utils.COLOR))
+                    cur = Utils.DARK_COLOR;
 
                 events.get(index).setColor(cur);
             }

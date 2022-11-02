@@ -117,7 +117,8 @@ public abstract class Calendar extends JComponent {
         drawGrid();
         drawTimes();
 
-        g2.setColor(Color.black);
+        g2.setColor(Color.white);
+        
         drawEvents();
     }
     
