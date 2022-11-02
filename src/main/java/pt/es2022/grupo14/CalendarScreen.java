@@ -36,8 +36,6 @@ public class CalendarScreen
         gbc.fill = GridBagConstraints.HORIZONTAL;
         //calControls.setLayout(new BoxLayout(calControls, BoxLayout.Y_AXIS));
 
-        calControls.setBackground(alphaGray);
-
         Utils utils = new Utils();
         //JSONParser parser = new JSONParser();
 
@@ -116,11 +114,13 @@ public class CalendarScreen
             weekControls.setBackground(Color.darkGray);
             mode.setIcon(new ImageIcon(darkMode));
             mode.setSelected(true);
+            calControls.setBackground(Color.darkGray);
             cal.changeColor();
         }
         else
         {
             weekControls.setBackground(alphaGray);
+            calControls.setBackground(alphaGray);
             mode.setIcon(new ImageIcon(lightMode));
             mode.setSelected(false);
         }
@@ -132,6 +132,7 @@ public class CalendarScreen
             {
                 mode.setIcon(new ImageIcon(darkMode));
                 weekControls.setBackground(Color.darkGray);
+                calControls.setBackground(Color.darkGray);
                 Main.darkMode = true;
             }
             else
@@ -139,6 +140,7 @@ public class CalendarScreen
                 Main.darkMode = false;
                 mode.setIcon(new ImageIcon(lightMode));
                 weekControls.setBackground(alphaGray);
+                calControls.setBackground(alphaGray);
             }
             frm.repaint();
         });
