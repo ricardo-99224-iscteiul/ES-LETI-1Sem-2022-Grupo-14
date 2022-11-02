@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>JSONConverter.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Main (2) (02/11/2022 13:16:31)</a> &gt; <a href="../../index.html" class="el_group">ES-LETI-1Sem-2022-Grupo-14</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">pt.es2022.grupo14</a> &gt; <span class="el_source">JSONConverter.java</span></div><h1>JSONConverter.java</h1><pre class="source lang-java linenums">package pt.es2022.grupo14;
+
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+<span class="fc" id="L7">public class JSONConverter</span>
+{
+    public void insert(String username, String name) throws IOException
+    {
+<span class="fc" id="L11">        Path webcalPath = Paths.get(&quot;src/calendars/&quot; + username + &quot;.json&quot;);</span>
+<span class="fc" id="L12">        File jsonFile = new File(webcalPath.toUri());</span>
+
+<span class="fc" id="L14">        BufferedReader bf = new BufferedReader(new FileReader(jsonFile));</span>
+<span class="fc" id="L15">        StringBuilder sb = new StringBuilder();</span>
+        String line;
+
+<span class="fc" id="L18">        boolean exame = name.contains(&quot;Exame&quot;);</span>
+
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        while ((line = bf.readLine()) != null)</span>
+        {
+<span class="pc bpc" id="L22" title="1 of 4 branches missed.">            if (line.contains(name) &amp;&amp; (exame == line.contains(&quot;Exame&quot;))) return;</span>
+<span class="fc" id="L23">            sb.append(line).append(&quot;\n&quot;);</span>
+        }
+<span class="fc" id="L25">        sb.append(&quot;\t\t{\n&quot;).append(&quot;\t\t\t\&quot;name\&quot; : &quot;).append(&quot;\&quot;&quot;).append(name).append(&quot;\&quot;,\n&quot;).append(&quot;\t\t},\n&quot;);</span>
+<span class="fc" id="L26">        bf.close();</span>
+
+<span class="fc" id="L28">        FileWriter fw = new FileWriter(jsonFile);</span>
+<span class="fc" id="L29">        fw.write(sb.toString());</span>
+<span class="fc" id="L30">        fw.close();</span>
+<span class="fc" id="L31">    }</span>
+
+    public void insert(String username, String name, String start, String end) throws IOException
+    {
+<span class="fc" id="L35">        insert(username, name);</span>
+
+<span class="fc" id="L37">        Path webcalPath = Paths.get(&quot;src/calendars/&quot; + username + &quot;.json&quot;);</span>
+<span class="fc" id="L38">        File jsonFile = new File(webcalPath.toUri());</span>
+
+<span class="fc" id="L40">        BufferedReader bf = new BufferedReader(new FileReader(jsonFile));</span>
+<span class="fc" id="L41">        StringBuilder sb = new StringBuilder();</span>
+        String line;
+
+<span class="fc" id="L44">        boolean exame = name.contains(&quot;Exame&quot;);</span>
+
+<span class="fc" id="L46">        boolean found = false;</span>
+
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        while ((line = bf.readLine()) != null)</span>
+        {
+<span class="fc" id="L50">            sb.append(line).append(&quot;\n&quot;);</span>
+<span class="pc bpc" id="L51" title="1 of 6 branches missed.">            if (!found &amp;&amp; line.contains(name) &amp;&amp; (exame == line.contains(&quot;Exame&quot;)))</span>
+            {
+<span class="fc" id="L53">                found = true;</span>
+
+<span class="fc" id="L55">                line = bf.readLine();</span>
+
+<span class="fc bfc" id="L57" title="All 2 branches covered.">                if (!line.contains(&quot;DT&quot;))</span>
+                {
+<span class="fc" id="L59">                    sb.append(&quot;\t\t\t\&quot;DT\&quot; : [\n&quot;).append(&quot;\t\t\t\t{\&quot;DTSTART\&quot;: \&quot;&quot;).append(start).append(&quot;\&quot;, &quot; +</span>
+<span class="fc" id="L60">                            &quot;\&quot;DTEND\&quot;: \&quot;&quot;).append(end).append(&quot;\&quot;}\n&quot;).append(&quot;\t\t\t]\n&quot;).append(&quot;\t\t},\n&quot;);</span>
+<span class="fc" id="L61">                }</span>
+                else
+                {
+<span class="fc" id="L64">                    sb.append(line).append(&quot;\n&quot;);</span>
+<span class="fc" id="L65">                    line = bf.readLine();</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">                    while (line.endsWith(&quot;,&quot;))</span>
+                    {
+<span class="fc" id="L68">                        sb.append(line).append(&quot;\n&quot;);</span>
+<span class="fc" id="L69">                        line = bf.readLine();</span>
+                    }
+<span class="fc" id="L71">                    sb.append(line).append(&quot;,\n&quot;);</span>
+<span class="fc" id="L72">                    sb.append(&quot;\t\t\t\t{\&quot;DTSTART\&quot;: \&quot;&quot;).append(start).append(&quot;\&quot;, &quot; +</span>
+<span class="fc" id="L73">                            &quot;\&quot;DTEND\&quot;: \&quot;&quot;).append(end).append(&quot;\&quot;}\n&quot;);</span>
+                }
+            }
+        }
+<span class="fc" id="L77">        bf.close();</span>
+
+<span class="fc" id="L79">        FileWriter fw = new FileWriter(jsonFile);</span>
+<span class="fc" id="L80">        fw.write(sb.toString());</span>
+<span class="fc" id="L81">        fw.close();</span>
+<span class="fc" id="L82">    }</span>
+
+    public void createFile(String username) throws IOException
+    {
+<span class="fc" id="L86">        Path webcalPath = Paths.get(&quot;src/calendars/&quot; + username + &quot;.json&quot;);</span>
+<span class="fc" id="L87">        File jsonFile = new File(webcalPath.toUri());</span>
+
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (jsonFile.exists())</span>
+<span class="nc" id="L90">            jsonFile.delete();</span>
+
+<span class="fc" id="L92">        jsonFile.createNewFile();</span>
+
+<span class="fc" id="L94">        FileWriter fw = new FileWriter(jsonFile, true);</span>
+
+<span class="fc" id="L96">        fw.write(&quot;{\n\t\&quot;Cadeiras\&quot; : [\n&quot;);</span>
+
+<span class="fc" id="L98">        fw.close();</span>
+
+<span class="fc" id="L100">    }</span>
+
+    public void closeFile(String username) throws IOException
+    {
+<span class="fc" id="L104">        Path webcalPath = Paths.get(&quot;src/calendars/&quot; + username + &quot;.json&quot;);</span>
+<span class="fc" id="L105">        File jsonFile = new File(webcalPath.toUri());</span>
+
+<span class="fc" id="L107">        BufferedReader bf = new BufferedReader(new FileReader(jsonFile));</span>
+<span class="fc" id="L108">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L109">        String line, last = &quot;&quot;;</span>
+
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        while ((line = bf.readLine()) != null)</span>
+        {
+<span class="fc" id="L113">            sb.append(line).append(&quot;\n&quot;);</span>
+        }
+<span class="fc" id="L115">        bf.close();</span>
+
+<span class="fc" id="L117">        sb.deleteCharAt(sb.toString().length() - 2);</span>
+<span class="fc" id="L118">        sb.append(&quot;\t]\n&quot;).append(&quot;}&quot;);</span>
+
+<span class="fc" id="L120">        FileWriter fw = new FileWriter(jsonFile);</span>
+<span class="fc" id="L121">        fw.write(sb.toString());</span>
+<span class="fc" id="L122">        fw.close();</span>
+<span class="fc" id="L123">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span>Main (2) (02/11/2022 13:16:31)</div></body></html>
