@@ -28,6 +28,8 @@ public class CalendarScreen
         frm.repaint();
 
         JPanel weekControls = new JPanel();
+        
+        JPanel convertControls = new JPanel();
 
         JPanel calControls = new JPanel();
         calControls.setLayout(new GridBagLayout());
@@ -95,7 +97,12 @@ public class CalendarScreen
 
         JButton prevMonthBtn = new JButton("Previous Month");
         prevMonthBtn.addActionListener(e -> cal.prevMonth());
+        
+        JButton toPdf = new JButton("PDF");
+        toPdf.addActionListener(e -> cal.nextMonth());
 
+        JButton toEmail = new JButton("EMAIL");
+        toEmail.addActionListener(e -> cal.prevMonth());
 
         try
         {
@@ -112,6 +119,7 @@ public class CalendarScreen
         if (Main.darkMode)
         {
             weekControls.setBackground(Color.darkGray);
+            convertControls.setBackground(Color.darkGray);
             mode.setIcon(new ImageIcon(darkMode));
             mode.setSelected(true);
             calControls.setBackground(Color.darkGray);
@@ -120,6 +128,7 @@ public class CalendarScreen
         else
         {
             weekControls.setBackground(alphaGray);
+            convertControls.setBackground(alphaGray);
             calControls.setBackground(alphaGray);
             mode.setIcon(new ImageIcon(lightMode));
             mode.setSelected(false);
@@ -132,6 +141,7 @@ public class CalendarScreen
             {
                 mode.setIcon(new ImageIcon(darkMode));
                 weekControls.setBackground(Color.darkGray);
+                convertControls.setBackground(Color.darkGray);
                 calControls.setBackground(Color.darkGray);
                 Main.darkMode = true;
             }
@@ -140,6 +150,7 @@ public class CalendarScreen
                 Main.darkMode = false;
                 mode.setIcon(new ImageIcon(lightMode));
                 weekControls.setBackground(alphaGray);
+                convertControls.setBackground(alphaGray);
                 calControls.setBackground(alphaGray);
             }
             frm.repaint();
@@ -162,8 +173,13 @@ public class CalendarScreen
         weekControls.add(nextWeekBtn);
         weekControls.add(nextMonthBtn);
         weekControls.add(mode);
+        
+        convertControls.add(toPdf);
+        convertControls.add(toEmail);
 
         frm.add(weekControls, BorderLayout.NORTH);
+        
+        frm.add(convertControls, BorderLayout.SOUTH);
 
         frm.add(calControls, BorderLayout.EAST);
 
