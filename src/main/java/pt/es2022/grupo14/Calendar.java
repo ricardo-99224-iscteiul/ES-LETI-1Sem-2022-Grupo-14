@@ -297,4 +297,5 @@ public abstract class Calendar extends JComponent {
         this.events = events;
         repaint();
     }
+    
 }

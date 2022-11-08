@@ -2,9 +2,24 @@ package pt.es2022.grupo14;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfDictionary;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfNumber;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,59 +28,59 @@ import static pt.es2022.grupo14.Utils.alphaGray;
 
 public class CalendarScreen
 {
-    JFrame frm;
-    Image lightMode = null;
-    Image darkMode = null;
-    ArrayList<CalendarEvent> events = new ArrayList<>();
-    HashMap<String, Boolean> checkboxes = new HashMap<>();
-    WeekCalendar cal = null;
-    public void showCalendar()
-    {
-        //boolean bDarkMode = true;
+	JFrame frm;
+	Image lightMode = null;
+	Image darkMode = null;
+	ArrayList<CalendarEvent> events = new ArrayList<>();
+	HashMap<String, Boolean> checkboxes = new HashMap<>();
+	WeekCalendar cal = null;
+	public void showCalendar()
+	{
+		//boolean bDarkMode = true;
 
-        frm = Main.getFrm();
-        frm.getContentPane().removeAll();
-        frm.repaint();
+		frm = Main.getFrm();
+		frm.getContentPane().removeAll();
+		frm.repaint();
 
-        JPanel weekControls = new JPanel();
-        
-        JPanel convertControls = new JPanel();
+		JPanel weekControls = new JPanel();
 
-        JPanel calControls = new JPanel();
-        calControls.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        //calControls.setLayout(new BoxLayout(calControls, BoxLayout.Y_AXIS));
+		JPanel convertControls = new JPanel();
 
-        Utils utils = new Utils();
-        //JSONParser parser = new JSONParser();
+		JPanel calControls = new JPanel();
+		calControls.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		//calControls.setLayout(new BoxLayout(calControls, BoxLayout.Y_AXIS));
 
-        ArrayList<String> calendarNames = utils.getCalendars();
+		Utils utils = new Utils();
+		//JSONParser parser = new JSONParser();
 
-        for (String username : calendarNames)
-        {
-            JCheckBox b = new JCheckBox(username);
-            if (checkboxes.containsKey(b.getText()))
-                b.setSelected(checkboxes.get(b.getText()));
-            else
-            {
-                checkboxes.put(b.getText(), b.isSelected());
-            }
-            b.addItemListener(itemEvent ->
-            {
-                checkboxes.put(b.getText(), b.isSelected());
-                //Main.changeScreen(Screen.CALENDAR);
-                updateEvents();
-                cal.setEvents(events);
-            });
+		ArrayList<String> calendarNames = utils.getCalendars();
 
-            calControls.add(b, gbc);
-        }
+		for (String username : calendarNames)
+		{
+			JCheckBox b = new JCheckBox(username);
+			if (checkboxes.containsKey(b.getText()))
+				b.setSelected(checkboxes.get(b.getText()));
+			else
+			{
+				checkboxes.put(b.getText(), b.isSelected());
+			}
+			b.addItemListener(itemEvent ->
+			{
+				checkboxes.put(b.getText(), b.isSelected());
+				//Main.changeScreen(Screen.CALENDAR);
+				updateEvents();
+				cal.setEvents(events);
+			});
 
-        updateEvents();
+			calControls.add(b, gbc);
+		}
 
-        /*LocalTime earlier = LocalTime.MAX;
+		updateEvents();
+
+		/*LocalTime earlier = LocalTime.MAX;
         LocalTime later = LocalTime.MIN;
 
         for (CalendarEvent event : events)
@@ -81,168 +96,207 @@ public class CalendarScreen
             }
         }*/
 
-        cal = new WeekCalendar(events);
+		cal = new WeekCalendar(events);
 
-        JButton goToTodayBtn = new JButton("Today");
-        goToTodayBtn.addActionListener(e -> cal.goToToday());
+		JButton goToTodayBtn = new JButton("Today");
+		goToTodayBtn.addActionListener(e -> cal.goToToday());
 
-        JButton nextWeekBtn = new JButton("Next Week");
-        nextWeekBtn.addActionListener(e -> cal.nextWeek());
+		JButton nextWeekBtn = new JButton("Next Week");
+		nextWeekBtn.addActionListener(e -> cal.nextWeek());
 
-        JButton prevWeekBtn = new JButton("Previous Week");
-        prevWeekBtn.addActionListener(e -> cal.prevWeek());
+		JButton prevWeekBtn = new JButton("Previous Week");
+		prevWeekBtn.addActionListener(e -> cal.prevWeek());
 
-        JButton nextMonthBtn = new JButton("Next Month");
-        nextMonthBtn.addActionListener(e -> cal.nextMonth());
+		JButton nextMonthBtn = new JButton("Next Month");
+		nextMonthBtn.addActionListener(e -> cal.nextMonth());
 
-        JButton prevMonthBtn = new JButton("Previous Month");
-        prevMonthBtn.addActionListener(e -> cal.prevMonth());
-        
-        JButton toPdf = new JButton("PDF");
-        toPdf.addActionListener(e -> cal.nextMonth());
+		JButton prevMonthBtn = new JButton("Previous Month");
+		prevMonthBtn.addActionListener(e -> cal.prevMonth());
 
-        JButton toEmail = new JButton("EMAIL");
-        toEmail.addActionListener(e -> cal.prevMonth());
+		JButton toPdf = new JButton("PDF");
+		toPdf.addActionListener(e -> {
+			try {
+				createPdf();
+			} catch (IOException | DocumentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
 
-        try
-        {
-            lightMode = ImageIO.read(new File(Utils.LIGHT_MODE));
-            lightMode = lightMode.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH );
-            darkMode = ImageIO.read(new File(Utils.DARK_MODE));
-            darkMode = darkMode.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH );
-        } catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
+		JButton toEmail = new JButton("EMAIL");
+		toEmail.addActionListener(e -> cal.prevMonth());
 
-        JToggleButton mode = new JToggleButton();
-        if (Main.darkMode)
-        {
-            weekControls.setBackground(Color.darkGray);
-            convertControls.setBackground(Color.darkGray);
-            mode.setIcon(new ImageIcon(darkMode));
-            mode.setSelected(true);
-            calControls.setBackground(Color.darkGray);
-            cal.changeColor();
-        }
-        else
-        {
-            weekControls.setBackground(alphaGray);
-            convertControls.setBackground(alphaGray);
-            calControls.setBackground(alphaGray);
-            mode.setIcon(new ImageIcon(lightMode));
-            mode.setSelected(false);
-        }
-        mode.addItemListener(e ->
-        {
-            int state = e.getStateChange();
-            cal.changeColor();
-            if (state == ItemEvent.SELECTED)
-            {
-                mode.setIcon(new ImageIcon(darkMode));
-                weekControls.setBackground(Color.darkGray);
-                convertControls.setBackground(Color.darkGray);
-                calControls.setBackground(Color.darkGray);
-                Main.darkMode = true;
-            }
-            else
-            {
-                Main.darkMode = false;
-                mode.setIcon(new ImageIcon(lightMode));
-                weekControls.setBackground(alphaGray);
-                convertControls.setBackground(alphaGray);
-                calControls.setBackground(alphaGray);
-            }
-            frm.repaint();
-        });
+		try
+		{
+			lightMode = ImageIO.read(new File(Utils.LIGHT_MODE));
+			lightMode = lightMode.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH );
+			darkMode = ImageIO.read(new File(Utils.DARK_MODE));
+			darkMode = darkMode.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH );
+		} catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
 
-        JButton menuBtn = new JButton();
-        try {
-            Image img = ImageIO.read(new File(Utils.MENU));
-            img = img.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH ) ;
-            menuBtn.setIcon(new ImageIcon(img));
-            menuBtn.addActionListener(e -> Main.changeScreen(Screen.MENU));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+		JToggleButton mode = new JToggleButton();
+		if (Main.darkMode)
+		{
+			weekControls.setBackground(Color.darkGray);
+			convertControls.setBackground(Color.darkGray);
+			mode.setIcon(new ImageIcon(darkMode));
+			mode.setSelected(true);
+			calControls.setBackground(Color.darkGray);
+			cal.changeColor();
+		}
+		else
+		{
+			weekControls.setBackground(alphaGray);
+			convertControls.setBackground(alphaGray);
+			calControls.setBackground(alphaGray);
+			mode.setIcon(new ImageIcon(lightMode));
+			mode.setSelected(false);
+		}
+		mode.addItemListener(e ->
+		{
+			int state = e.getStateChange();
+			cal.changeColor();
+			if (state == ItemEvent.SELECTED)
+			{
+				mode.setIcon(new ImageIcon(darkMode));
+				weekControls.setBackground(Color.darkGray);
+				convertControls.setBackground(Color.darkGray);
+				calControls.setBackground(Color.darkGray);
+				Main.darkMode = true;
+			}
+			else
+			{
+				Main.darkMode = false;
+				mode.setIcon(new ImageIcon(lightMode));
+				weekControls.setBackground(alphaGray);
+				convertControls.setBackground(alphaGray);
+				calControls.setBackground(alphaGray);
+			}
+			frm.repaint();
+		});
 
-        weekControls.add(menuBtn);
-        weekControls.add(prevMonthBtn);
-        weekControls.add(prevWeekBtn);
-        weekControls.add(goToTodayBtn);
-        weekControls.add(nextWeekBtn);
-        weekControls.add(nextMonthBtn);
-        weekControls.add(mode);
-        
-        convertControls.add(toPdf);
-        convertControls.add(toEmail);
+		JButton menuBtn = new JButton();
+		try {
+			Image img = ImageIO.read(new File(Utils.MENU));
+			img = img.getScaledInstance( 16, 16,  java.awt.Image.SCALE_SMOOTH ) ;
+			menuBtn.setIcon(new ImageIcon(img));
+			menuBtn.addActionListener(e -> Main.changeScreen(Screen.MENU));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-        frm.add(weekControls, BorderLayout.NORTH);
-        
-        frm.add(convertControls, BorderLayout.SOUTH);
+		weekControls.add(menuBtn);
+		weekControls.add(prevMonthBtn);
+		weekControls.add(prevWeekBtn);
+		weekControls.add(goToTodayBtn);
+		weekControls.add(nextWeekBtn);
+		weekControls.add(nextMonthBtn);
+		weekControls.add(mode);
 
-        frm.add(calControls, BorderLayout.EAST);
+		convertControls.add(toPdf);
+		convertControls.add(toEmail);
 
-        frm.add(cal, BorderLayout.CENTER);
+		frm.add(weekControls, BorderLayout.NORTH);
 
-        frm.revalidate();
-        frm.repaint();
-    }
+		frm.add(convertControls, BorderLayout.SOUTH);
 
-    /*public void addEventsToCal(CalendarEvent event) {
+		frm.add(calControls, BorderLayout.EAST);
+
+		frm.add(cal, BorderLayout.CENTER);
+
+		frm.revalidate();
+		frm.repaint();
+	}
+
+	/*public void addEventsToCal(CalendarEvent event) {
         events.add(event);
     }*/
 
-    public void addEventsToCal(ArrayList<CalendarEvent> events) {
-        this.events.addAll(events);
-    }
+	public void addEventsToCal(ArrayList<CalendarEvent> events) {
+		this.events.addAll(events);
+	}
 
-    public void updateEvents()
-    {
-        events = new ArrayList<>();
+	public void updateEvents()
+	{
+		events = new ArrayList<>();
 
-        Utils utils = new Utils();
-        JSONParser parser = new JSONParser();
+		Utils utils = new Utils();
+		JSONParser parser = new JSONParser();
 
-        ArrayList<String> calendarNames = utils.getCalendars();
+		ArrayList<String> calendarNames = utils.getCalendars();
 
-        for (String username : calendarNames)
-        {
-            for (String name : checkboxes.keySet())
-            {
-                if (checkboxes.get(name) && name.equals(username))
-                {
-                    try
-                    {
-                        ArrayList<CalendarEvent> additions = changeColor(parser.getAllEvents(username));
-                        addEventsToCal(additions);
-                    } catch (IOException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        }
-    }
+		for (String username : calendarNames)
+		{
+			for (String name : checkboxes.keySet())
+			{
+				if (checkboxes.get(name) && name.equals(username))
+				{
+					try
+					{
+						ArrayList<CalendarEvent> additions = changeColor(parser.getAllEvents(username));
+						addEventsToCal(additions);
+					} catch (IOException e)
+					{
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}
+	}
 
-    private ArrayList<CalendarEvent> changeColor(ArrayList<CalendarEvent> newEvents)
-    {
-        ArrayList<CalendarEvent> additions = new ArrayList<>();
-        for (CalendarEvent event : newEvents)
-        {
-            int index = events.indexOf(event);
-            if (index != -1)
-            {
-                Color cur = events.get(index).getColor();
-                if (cur.equals(Utils.LIGHT_COLOR))
-                    cur = Utils.COLOR;
-                else if (cur.equals(Utils.COLOR))
-                    cur = Utils.DARK_COLOR;
+	private ArrayList<CalendarEvent> changeColor(ArrayList<CalendarEvent> newEvents)
+	{
+		ArrayList<CalendarEvent> additions = new ArrayList<>();
+		for (CalendarEvent event : newEvents)
+		{
+			int index = events.indexOf(event);
+			if (index != -1)
+			{
+				Color cur = events.get(index).getColor();
+				if (cur.equals(Utils.LIGHT_COLOR))
+					cur = Utils.COLOR;
+				else if (cur.equals(Utils.COLOR))
+					cur = Utils.DARK_COLOR;
 
-                events.get(index).setColor(cur);
-            }
-            else additions.add(event);
-        }
-        return additions;
-    }
+				events.get(index).setColor(cur);
+			}
+			else additions.add(event);
+		}
+		return additions;
+	}
+	
+	public BufferedImage createImage(JPanel panel) {
+	    int w = panel.getWidth();
+	    int h = panel.getHeight();
+	    BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+	    Graphics2D g = bi.createGraphics();
+	    panel.paint(g);
+	    g.dispose();
+	    return bi;
+	}
+
+	public void createPdf() throws IOException, DocumentException {
+		int width = cal.getWidth();
+		int height = cal.getHeight();
+		Document document = new Document(PageSize._11X17.rotate());
+		try {
+			PdfWriter writer;
+			writer = PdfWriter.getInstance(document, new FileOutputStream("./Calendário.pdf"));
+			document.open();
+			PdfContentByte cb = writer.getDirectContent();
+			PdfTemplate tp = cb.createTemplate(width, height);
+			Graphics2D g2;
+			g2 = tp.createGraphics(width, height);
+			cal.print(g2);
+			g2.dispose();
+			cb.addTemplate(tp, 146, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		document.close();
+
+	}
 }
