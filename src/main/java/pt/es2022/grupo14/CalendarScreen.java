@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -116,9 +117,9 @@ public class CalendarScreen
 		JButton toPdf = new JButton("PDF");
 		toPdf.addActionListener(e -> {
 			try {
+				//createImage();
 				createPdf();
 			} catch (IOException | DocumentException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
@@ -278,10 +279,11 @@ public class CalendarScreen
 	    return bi;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void createPdf() throws IOException, DocumentException {
 		int width = cal.getWidth();
 		int height = cal.getHeight();
-		Document document = new Document(PageSize._11X17.rotate());
+		Document document = new Document(new com.itextpdf.text.Rectangle(width, height));
 		try {
 			PdfWriter writer;
 			writer = PdfWriter.getInstance(document, new FileOutputStream("./Calendário.pdf"));
@@ -292,11 +294,29 @@ public class CalendarScreen
 			g2 = tp.createGraphics(width, height);
 			cal.print(g2);
 			g2.dispose();
-			cb.addTemplate(tp, 146, 0);
+			cb.addTemplate(tp, 0, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		document.close();
 
 	}
+	
+//	public void createImage() {
+//
+//	    int w = cal.getWidth();
+//	    int h = cal.getHeight();
+//	    BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+//	    Graphics2D g = bi.createGraphics();
+//	    cal.paint(g);
+//	    g.dispose();
+//	    
+//	    Document document = new Document(PageSize.A4, 20, 20, 20, 20);
+//	    PdfWriter.getInstance(document, new FileOutputStream("./Calendário.pdf"));
+//	    document.open();
+////	    Image image = Image.getInstance(getClass().getResource("/logo.png"));
+//	    document.add(bi);
+//	    document.close();
+//	    
+//	}
 }
