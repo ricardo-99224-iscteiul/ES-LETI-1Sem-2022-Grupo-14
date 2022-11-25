@@ -6,14 +6,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
-import java.util.Scanner;
-
-import java.util.TreeMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -26,9 +19,11 @@ public class CalendarReader {
 
 	public void read(String webcal) {
 
-		if (webcal.isBlank()) throw new IllegalArgumentException();
+		if (webcal == null) throw new IllegalArgumentException("Webcal cannot be null");
 
-		if (!webcalCheck.matcher(webcal).find()) throw new IllegalArgumentException();
+		if (webcal.isBlank()) throw new IllegalArgumentException("Webcal cannot be empty");
+
+		if (!webcalCheck.matcher(webcal).find()) throw new IllegalArgumentException("Webcal must be a valid link");
 
 //		webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=aefcs@iscte.pt&password=v4m2d3fKKnQprqri84bKwiACNzkvW0wgeuKC1yBN1zqoMmqGrfX1eVVLZ1ZrAdkTJ7D9oaJ5ymumul522r7ItOQxTgOVhlhr7DhQyxmkHM7K7RoVqiaMlevpoLUwS6tI
 //		webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=rdlpo@iscte.pt&password=YK69wQ5t4QT3bNCfs7ufNpAyUdaLkVzY8j2EHptfXtckXwGG2odZxl3fylYWZ7oFIZBuWjVfZ9ZYbOt8mmtjhu5cpKgEbGfZIQg2xZU4N5iq5FRbfGvEkVeUStqvOZ82
@@ -39,15 +34,15 @@ public class CalendarReader {
 
 		String date = null;
 
-		String dateStart = null;
-		String dataStart = null;
-		String horaStart = null;
+		String dateStart;
+		String dataStart;
+		String horaStart;
 
-		String dateEnd = null;
-		String dataEnd = null;
-		String horaEnd = null;
+		String dateEnd;
+		String dataEnd;
+		String horaEnd;
 
-		String summary = null;
+		String summary;
 
 		JSONConverter jc = new JSONConverter();
 		
@@ -102,7 +97,7 @@ public class CalendarReader {
 					}
 
 					if (!eventos.containsKey(summary)) {
-						eventos.put(summary, new ArrayList<String>());
+						eventos.put(summary, new ArrayList<>());
 						eventos.get(summary).add(dataStart + horaStart + " " + dataEnd + horaEnd);
 
 					} else {

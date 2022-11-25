@@ -9,6 +9,8 @@ public class Week {
     private ArrayList<LocalDate> days;
 
     public Week(LocalDate date) {
+        if (date == null) throw new IllegalArgumentException("Date cannot be null");
+
         days = new ArrayList<>();
         LocalDate monday = getStartOfWeek(date);
         days.add(monday);
@@ -18,6 +20,8 @@ public class Week {
     }
 
     public static LocalDate getStartOfWeek(LocalDate date) {
+        if (date == null) throw new IllegalArgumentException("Date cannot be null");
+
         LocalDate day = date;
         while (day.getDayOfWeek() != DayOfWeek.MONDAY) {
             day = day.minusDays(1);
@@ -26,6 +30,8 @@ public class Week {
     }
 
     public LocalDate getDay(DayOfWeek dayOfWeek) {
+        if (dayOfWeek == null) throw new IllegalArgumentException("DayOfWeek cannot be null");
+
         return days.get(dayOfWeek.getValue() - 1);
     }
 
@@ -39,4 +45,12 @@ public class Week {
         return new Week(monday.minusDays(3));
     }
 
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null) return false;
+        if (!(obj instanceof Week)) return false;
+
+        return this.days.equals(((Week) obj).days);
+    }
 }

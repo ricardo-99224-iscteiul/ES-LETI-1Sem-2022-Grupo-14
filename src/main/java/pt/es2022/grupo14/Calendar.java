@@ -40,6 +40,7 @@ public abstract class Calendar extends JComponent {
     }*/
 
     Calendar(ArrayList<CalendarEvent> events) {
+        if (events == null) throw new IllegalArgumentException("Events array cannot be null");
         this.events = events;
     }
     

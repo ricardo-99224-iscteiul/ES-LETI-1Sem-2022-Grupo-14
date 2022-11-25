@@ -19,6 +19,12 @@ public class CalendarEvent {
     }
 
     public CalendarEvent(LocalDate date, LocalTime start, LocalTime end, String text, Color color) {
+        if (date == null) throw new IllegalArgumentException("Date cannot be null");
+        if (start == null) throw new IllegalArgumentException("Start time cannot be null");
+        if (end == null) throw new IllegalArgumentException("End time cannot be null");
+        if (text == null) throw new IllegalArgumentException("Text cannot be null");
+        if (color == null) throw new IllegalArgumentException("Color cannot be null");
+
         this.date = date;
         this.start = start;
         this.end = end;
@@ -67,6 +73,7 @@ public class CalendarEvent {
     }
 
     public void setColor(Color newColor) {
+        if (newColor == null) throw new IllegalArgumentException("Color cannot be null");
         color = newColor;
     }
 
