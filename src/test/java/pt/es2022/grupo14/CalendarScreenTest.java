@@ -1,6 +1,5 @@
 package pt.es2022.grupo14;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,39 +7,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CalendarScreenTest
 {
+    CalendarScreen calendarScreen;
 
     @BeforeEach
     void setUp()
     {
-    }
-
-    @AfterEach
-    void tearDown()
-    {
-    }
-
-    @Test
-    void showCalendar()
-    {
+        calendarScreen = new CalendarScreen();
     }
 
     @Test
     void addEventsToCal()
     {
+        assertThrows(IllegalArgumentException.class, () -> calendarScreen.addEventsToCal(null));
+
     }
 
     @Test
-    void updateEvents()
+    void changeColor()
     {
+        assertThrows(IllegalArgumentException.class, () -> calendarScreen.changeColor(null));
     }
 
     @Test
     void createImage()
     {
-    }
-
-    @Test
-    void createPdf()
-    {
+        assertThrows(IllegalArgumentException.class, () -> calendarScreen.createImage(null));
     }
 }

@@ -242,7 +242,7 @@ public class CalendarScreen
 		}
 	}
 
-	private ArrayList<CalendarEvent> changeColor(ArrayList<CalendarEvent> newEvents)
+	public ArrayList<CalendarEvent> changeColor(ArrayList<CalendarEvent> newEvents)
 	{
 		if (newEvents == null) throw new IllegalArgumentException("NewEvents cannot be null");
 
@@ -266,6 +266,8 @@ public class CalendarScreen
 	}
 	
 	public BufferedImage createImage(JPanel panel) {
+
+		if (panel == null) throw new IllegalArgumentException("Panel cannot be null");
 	    int w = panel.getWidth();
 	    int h = panel.getHeight();
 	    BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
