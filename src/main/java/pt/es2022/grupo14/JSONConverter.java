@@ -8,6 +8,9 @@ public class JSONConverter
 {
     public void insert(String username, String name) throws IOException
     {
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
+        if (name == null || name.isBlank()) throw new IllegalArgumentException("Name cannot be null or empty");
+
         Path webcalPath = Paths.get("src/calendars/" + username + ".json");
         File jsonFile = new File(webcalPath.toUri());
 
@@ -32,6 +35,11 @@ public class JSONConverter
 
     public void insert(String username, String name, String start, String end) throws IOException
     {
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
+        if (name == null || name.isBlank()) throw new IllegalArgumentException("Name cannot be null or empty");
+        if (start == null || start.isBlank()) throw new IllegalArgumentException("Start cannot be null or empty");
+        if (end == null || end.isBlank()) throw new IllegalArgumentException("End cannot be null or empty");
+
         insert(username, name);
 
         Path webcalPath = Paths.get("src/calendars/" + username + ".json");
@@ -83,6 +91,8 @@ public class JSONConverter
 
     public void createFile(String username) throws IOException
     {
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
+
         Path webcalPath = Paths.get("src/calendars/" + username + ".json");
         File jsonFile = new File(webcalPath.toUri());
 
@@ -101,6 +111,8 @@ public class JSONConverter
 
     public void closeFile(String username) throws IOException
     {
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
+
         Path webcalPath = Paths.get("src/calendars/" + username + ".json");
         File jsonFile = new File(webcalPath.toUri());
 

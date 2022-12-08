@@ -18,6 +18,8 @@ public class Main
 
     public static void changeScreen(Screen screen)
     {
+        if (screen == null) throw new IllegalArgumentException("Screen cannot be null");
+
         switch (screen) {
             case CALENDAR:
                 calendarScreen.showCalendar();

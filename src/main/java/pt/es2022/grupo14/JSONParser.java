@@ -9,8 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.*;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
@@ -19,6 +19,8 @@ public class JSONParser
 {
     public ArrayList<CalendarEvent> getAllEvents(String username) throws IOException
     {
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
+
         ArrayList<CalendarEvent> events = new ArrayList<>();
         Path webcalPath = Paths.get(Utils.CALENDARS + username + ".json");
         File jsonFile = new File(webcalPath.toUri());

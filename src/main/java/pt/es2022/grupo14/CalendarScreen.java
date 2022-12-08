@@ -1,27 +1,19 @@
 package pt.es2022.grupo14;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfDictionary;
-import com.itextpdf.text.pdf.PdfName;
-import com.itextpdf.text.pdf.PdfNumber;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -217,6 +209,8 @@ public class CalendarScreen
     }*/
 
 	public void addEventsToCal(ArrayList<CalendarEvent> events) {
+		if (events == null) throw new IllegalArgumentException("Events cannot be null");
+
 		this.events.addAll(events);
 	}
 
@@ -250,6 +244,8 @@ public class CalendarScreen
 
 	private ArrayList<CalendarEvent> changeColor(ArrayList<CalendarEvent> newEvents)
 	{
+		if (newEvents == null) throw new IllegalArgumentException("NewEvents cannot be null");
+
 		ArrayList<CalendarEvent> additions = new ArrayList<>();
 		for (CalendarEvent event : newEvents)
 		{
