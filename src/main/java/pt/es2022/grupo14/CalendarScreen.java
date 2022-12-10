@@ -257,6 +257,8 @@ public class CalendarScreen
 
 	/**
 	 * Cria um PDF a partir do calendário
+	 * @throws IOException
+	 * @throws DocumentException
 	 */
 	@SuppressWarnings("deprecation")
 	public void createPdf() throws IOException, DocumentException {
