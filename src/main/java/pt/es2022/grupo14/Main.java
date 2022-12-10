@@ -9,6 +9,9 @@ public class Main
     private static MenuScreen menuScreen = new MenuScreen();
     public static boolean darkMode = true;
 
+    /**
+     * Main
+     */
     public static void main(String[] args) {
         frm.setVisible(true);
         frm.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -16,6 +19,10 @@ public class Main
         changeScreen(Screen.CALENDAR);
     }
 
+    /**
+     * Método que troca o ecrã
+     * @param screen é o ecrã
+     */
     public static void changeScreen(Screen screen)
     {
         if (screen == null) throw new IllegalArgumentException("Screen cannot be null");
@@ -30,6 +37,9 @@ public class Main
         }
     }
 
+    /**
+     * @return do frame
+     */
     public static JFrame getFrm()
     {
         if (frm != null)
