@@ -8,6 +8,10 @@ public class Week {
 
     private ArrayList<LocalDate> days;
 
+    /**
+     * Vai buscar as variáveis da semana de qualquer data
+     * @param date é uma data
+     */
     public Week(LocalDate date) {
         if (date == null) throw new IllegalArgumentException("Date cannot be null");
 
@@ -19,6 +23,11 @@ public class Week {
         }
     }
 
+    /**
+     * Vai buscar o primeiro dia da semana de qualquer data
+     * @param date é uma data
+     * @return
+     */
     public static LocalDate getStartOfWeek(LocalDate date) {
         if (date == null) throw new IllegalArgumentException("Date cannot be null");
 
@@ -29,17 +38,30 @@ public class Week {
         return day;
     }
 
+    /**
+     * Devolve o dia da semana
+     * @param dayOfWeek é um dia da semana
+     * @return do dia da semana
+     */
     public LocalDate getDay(DayOfWeek dayOfWeek) {
         if (dayOfWeek == null) throw new IllegalArgumentException("DayOfWeek cannot be null");
 
         return days.get(dayOfWeek.getValue() - 1);
     }
 
+    /**
+     * Viaja para a próxima semana
+     * @return da próxima semana
+     */
     public Week nextWeek() {
         final LocalDate friday = getDay(DayOfWeek.FRIDAY);
         return new Week(friday.plusDays(3));
     }
 
+    /**
+     * Viaja para a semana anterior
+     * @return da semana anterior
+     */
     public Week prevWeek() {
         final LocalDate monday = getDay(DayOfWeek.MONDAY);
         return new Week(monday.minusDays(3));
