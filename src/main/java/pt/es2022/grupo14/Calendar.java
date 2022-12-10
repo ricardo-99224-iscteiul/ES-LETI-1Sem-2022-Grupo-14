@@ -35,39 +35,28 @@ public abstract class Calendar extends JComponent {
     
     private boolean darkMode = false;
 
-    /*public Calendar() {
-        this(new ArrayList<>());
-    }*/
-
+    /**
+     * Construtor da classe Calendar
+     * @param events são os eventos do calendário
+     */
     Calendar(ArrayList<CalendarEvent> events) {
         if (events == null) throw new IllegalArgumentException("Events array cannot be null");
         this.events = events;
     }
-    
-    /*public void setStartTime(LocalTime ST_Time) {
-    	START_TIME = ST_Time;
-    }*/
-    
-    /*public void setEndTime(LocalTime END_Time) {
-    	END_TIME = END_Time;
-    }*/
 
-    /*public static LocalTime roundTime(LocalTime time, int minutes) {
-        LocalTime t = time;
-
-        if (t.getMinute() % minutes > minutes / 2) {
-            t = t.plusMinutes(minutes - (t.getMinute() % minutes));
-        } else if (t.getMinute() % minutes < minutes / 2) {
-            t = t.minusMinutes(t.getMinute() % minutes);
-        }
-
-        return t;
-    }*/
-
+    /**
+     * @param date é uma data
+     */
     protected abstract boolean dateInRange(LocalDate date);
 
+    /**
+     * @param day é um dia da semana
+     */
     protected abstract LocalDate getDateFromDay(DayOfWeek day);
 
+    /**
+     * Método para calcular o tamanho das quadriculas
+     */
     private void calculateScaleVars() {
         int width = getWidth();
         int height = getHeight();
@@ -86,12 +75,22 @@ public abstract class Calendar extends JComponent {
 
     protected abstract int numDaysToShow();
 
+    /**
+     * @param dayOfWeek é um dia da semana
+     */
     protected abstract double dayToPixel(DayOfWeek dayOfWeek);
 
+    /**
+     * @param time é um tempo
+     * @return da altura do pixel na hora
+     */
     private double timeToPixel(LocalTime time) {
         return ((time.toSecondOfDay() - START_TIME.toSecondOfDay()) * timeScale) + HEADER_HEIGHT;
     }
-
+    
+    /**
+     * Desenha a aplicação
+     */
     @Override
     protected void paintComponent(Graphics g) {
         calculateScaleVars();
@@ -123,6 +122,9 @@ public abstract class Calendar extends JComponent {
         drawEvents();
     }
     
+    /**
+     * Muda as cores entre DarkMode e LightMode
+     */
     public void changeColor() {
     	darkMode = !darkMode;
     	repaint();
@@ -132,6 +134,9 @@ public abstract class Calendar extends JComponent {
 
     protected abstract DayOfWeek getEndDay();
 
+    /**
+     * Escreve os dias da semana
+     */
     private void drawDayHeadings() {
         int y = 20;
         int x;
@@ -159,6 +164,9 @@ public abstract class Calendar extends JComponent {
         }
     }
 
+    /**
+     * Desenha a grelha
+     */
     private void drawGrid() {
 
         final Color ORIG_COLOUR = g2.getColor();
@@ -188,6 +196,9 @@ public abstract class Calendar extends JComponent {
         g2.setColor(ORIG_COLOUR);
     }
 
+    /**
+     * Sombreia o dia atual
+     */
     private void drawTodayShade() {
         LocalDate today = LocalDate.now();
 
@@ -205,6 +216,9 @@ public abstract class Calendar extends JComponent {
         g2.setColor(origColor);
     }
 
+    /**
+     * Escreve os períodos de tempo
+     */
     private void drawTimes() {
         int y;
         for (LocalTime time = START_TIME; time.compareTo(END_TIME) <= 0; time = time.plusMinutes(30)) {
@@ -213,6 +227,9 @@ public abstract class Calendar extends JComponent {
         }
     }
 
+    /**
+     * Preenche as slots de tempo com eventos
+     */
     private void drawEvents() {
         double x;
         double y0;
@@ -257,6 +274,11 @@ public abstract class Calendar extends JComponent {
         }
     }
 
+    /**
+     * Corta a descrição do evento para caber no slot
+     * @param text é a descrição do evento
+     * @return do caracter onde a palavra deve ser cortada
+     */
     private int cutString(String text)
     {
         String lastString = "";
@@ -272,28 +294,27 @@ public abstract class Calendar extends JComponent {
         return lastString.length() - 1;
     }
 
+    /**
+     * @return da largura do dia
+     */
     protected double getDayWidth() {
         return dayWidth;
     }
 
     protected abstract void setRangeToToday();
 
+    /**
+     * Viajar para a semana do dia atual
+     */
     public void goToToday() {
         setRangeToToday();
         repaint();
     }
 
-    /*public void addEvent(CalendarEvent event) {
-        events.add(event);
-        repaint();
-    }*/
-
-    /*public boolean removeEvent(CalendarEvent event) {
-        boolean removed = events.remove(event);
-        repaint();
-        return removed;
-    }*/
-
+    /**
+     * Altera a lista de eventos
+     * @param events é uma lista com eventos
+     */
     public void setEvents(ArrayList<CalendarEvent> events) {
         this.events = events;
         repaint();
