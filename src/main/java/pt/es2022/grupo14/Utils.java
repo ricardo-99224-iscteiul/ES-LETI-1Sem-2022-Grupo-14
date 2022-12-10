@@ -18,6 +18,10 @@ public class Utils
     public static final Color COLOR = new Color(30,144,255);
     public static final Color DARK_COLOR = new Color(0,0,255);
 
+    /**
+     * Vai buscar os ficheiros JSON à pasta "calendars" e guarda os seus nomes
+     * @return de uma lista com os nomes dos ficheiros JSON
+     */
     public ArrayList<String> getCalendars()
     {
         File calendarFolder = new File(CALENDARS);
