@@ -6,6 +6,12 @@ import java.nio.file.Paths;
 
 public class JSONConverter
 {
+    /**
+     * Método para inserir um evento no ficheiro JSON
+     * @param username é o nome do ficheiro
+     * @param name é o nome do evento
+     * @throws IOException
+     */
     public void insert(String username, String name) throws IOException
     {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
@@ -33,6 +39,14 @@ public class JSONConverter
         fw.close();
     }
 
+    /**
+     * Método para inserir um evento no ficheiro JSON
+     * @param username é o nome do ficheiro
+     * @param name é o nome do evento
+     * @param start é a data de início do evento
+     * @param end é a data de fim do evento
+     * @throws IOException
+     */
     public void insert(String username, String name, String start, String end) throws IOException
     {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
@@ -89,6 +103,11 @@ public class JSONConverter
         fw.close();
     }
 
+    /**
+     * Método que cria o ficheiro JSON
+     * @param username é o nome do ficheiro
+     * @throws IOException
+     */
     public void createFile(String username) throws IOException
     {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
@@ -109,6 +128,11 @@ public class JSONConverter
 
     }
 
+    /**
+     * Método que acabao ficheiro JSON
+     * @param username é o nome do ficheiro
+     * @throws IOException
+     */
     public void closeFile(String username) throws IOException
     {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
