@@ -8,6 +8,10 @@ public class WeekCalendar extends Calendar {
 
     private Week week;
 
+    /**
+     * Construtor da classe WeekCalendar
+     * @param events é uma lista com eventos
+     */
     public WeekCalendar(ArrayList<CalendarEvent> events) {
         super(events);
         week = new Week(LocalDate.now());
@@ -27,20 +31,32 @@ public class WeekCalendar extends Calendar {
         return week.getDay(day);
     }
 
+    /**
+     * Número de dias a serem mostrados
+     */
     protected int numDaysToShow() {
         return 5;
     }
 
+    /**
+     * Definir primeiro dia da semana
+     */
     @Override
     protected DayOfWeek getStartDay() {
         return DayOfWeek.MONDAY;
     }
 
+    /**
+     * Definir último dia da semana
+     */
     @Override
     protected DayOfWeek getEndDay() {
         return DayOfWeek.FRIDAY;
     }
 
+    /**
+     * Cria uma nova semana com o dia atual
+     */
     @Override
     protected void setRangeToToday() {
         week = new Week(LocalDate.now());
@@ -53,21 +69,33 @@ public class WeekCalendar extends Calendar {
         return TIME_COL_WIDTH + getDayWidth() * (dayOfWeek.getValue() - 1);
     }
 
+    /**
+     * Viaja para a próxima semana
+     */
     public void nextWeek() {
         week = week.nextWeek();
         repaint();
     }
 
+    /**
+     * Viaja para a semana anterior
+     */
     public void prevWeek() {
         week = week.prevWeek();
         repaint();
     }
 
+    /**
+     * Viaja para o próximo mês
+     */
     public void nextMonth() {
         week = new Week(week.getDay(DayOfWeek.MONDAY).plusWeeks(4));
         repaint();
     }
 
+    /**
+     * Viaja para o mês anterior
+     */
     public void prevMonth() {
         week = new Week(week.getDay(DayOfWeek.MONDAY).minusWeeks(4));
         repaint();
