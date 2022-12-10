@@ -9,7 +9,7 @@ public class Week {
     private ArrayList<LocalDate> days;
 
     /**
-     * Vai buscar as variáveis da semana de qualquer data
+     * Construtor da classe Week
      * @param date é uma data
      */
     public Week(LocalDate date) {
