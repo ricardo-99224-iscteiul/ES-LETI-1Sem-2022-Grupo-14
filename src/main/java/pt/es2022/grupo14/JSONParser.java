@@ -17,6 +17,12 @@ import java.util.TimeZone;
 
 public class JSONParser
 {
+    /**
+     * Lê os eventos todos que estão dentro do ficheiro
+     * @param username é o nome do ficheiro
+     * @return dos eventos prontos a ser colocados no calendário
+     * @throws IOException
+     */
     public ArrayList<CalendarEvent> getAllEvents(String username) throws IOException
     {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
