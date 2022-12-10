@@ -27,10 +27,4 @@ class CalendarScreenTest
     {
         assertThrows(IllegalArgumentException.class, () -> calendarScreen.changeColor(null));
     }
-
-    @Test
-    void createImage()
-    {
-        assertThrows(IllegalArgumentException.class, () -> calendarScreen.createImage(null));
-    }
 }

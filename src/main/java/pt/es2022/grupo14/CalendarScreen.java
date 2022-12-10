@@ -27,9 +27,12 @@ public class CalendarScreen
 	ArrayList<CalendarEvent> events = new ArrayList<>();
 	HashMap<String, Boolean> checkboxes = new HashMap<>();
 	WeekCalendar cal = null;
+	
+	/**
+	 * Método para criar a GUI do calendário
+	 */
 	public void showCalendar()
 	{
-		//boolean bDarkMode = true;
 
 		frm = Main.getFrm();
 		frm.getContentPane().removeAll();
@@ -44,10 +47,8 @@ public class CalendarScreen
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		//calControls.setLayout(new BoxLayout(calControls, BoxLayout.Y_AXIS));
 
 		Utils utils = new Utils();
-		//JSONParser parser = new JSONParser();
 
 		ArrayList<String> calendarNames = utils.getCalendars();
 
@@ -63,7 +64,6 @@ public class CalendarScreen
 			b.addItemListener(itemEvent ->
 			{
 				checkboxes.put(b.getText(), b.isSelected());
-				//Main.changeScreen(Screen.CALENDAR);
 				updateEvents();
 				cal.setEvents(events);
 			});
@@ -72,22 +72,6 @@ public class CalendarScreen
 		}
 
 		updateEvents();
-
-		/*LocalTime earlier = LocalTime.MAX;
-        LocalTime later = LocalTime.MIN;
-
-        for (CalendarEvent event : events)
-        {
-            if (event.getStart().compareTo(earlier) < 0)
-            {
-                earlier = event.getStart();
-            }
-
-            if (event.getEnd().compareTo(later) < 0)
-            {
-                earlier = event.getEnd();
-            }
-        }*/
 
 		cal = new WeekCalendar(events);
 
@@ -109,7 +93,6 @@ public class CalendarScreen
 		JButton toPdf = new JButton("PDF");
 		toPdf.addActionListener(e -> {
 			try {
-				//createImage();
 				createPdf();
 			} catch (IOException | DocumentException e1) {
 				e1.printStackTrace();
@@ -204,18 +187,20 @@ public class CalendarScreen
 		frm.repaint();
 	}
 
-	/*public void addEventsToCal(CalendarEvent event) {
-        events.add(event);
-    }*/
-
+	/**
+	 * Adiciona eventos ao calendário
+	 * @param events é uma lista de eventos
+	 */
 	public void addEventsToCal(ArrayList<CalendarEvent> events) {
 		if (events == null) throw new IllegalArgumentException("Events cannot be null");
 
 		this.events.addAll(events);
 	}
 
-	public void updateEvents()
-	{
+	/**
+	 * Dá update aos eventos
+	 */
+	public void updateEvents() {
 		events = new ArrayList<>();
 
 		Utils utils = new Utils();
@@ -242,6 +227,11 @@ public class CalendarScreen
 		}
 	}
 
+	/**
+	 * Muda a cor dos eventos
+	 * @param newEvents é uma lista de eventos
+	 * @return da lista dos eventos com a cor alterada
+	 */
 	public ArrayList<CalendarEvent> changeColor(ArrayList<CalendarEvent> newEvents)
 	{
 		if (newEvents == null) throw new IllegalArgumentException("NewEvents cannot be null");
@@ -264,19 +254,10 @@ public class CalendarScreen
 		}
 		return additions;
 	}
-	
-	public BufferedImage createImage(JPanel panel) {
 
-		if (panel == null) throw new IllegalArgumentException("Panel cannot be null");
-	    int w = panel.getWidth();
-	    int h = panel.getHeight();
-	    BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-	    Graphics2D g = bi.createGraphics();
-	    panel.paint(g);
-	    g.dispose();
-	    return bi;
-	}
-
+	/**
+	 * Cria um PDF a partir do calendário
+	 */
 	@SuppressWarnings("deprecation")
 	public void createPdf() throws IOException, DocumentException {
 		int width = cal.getWidth();
@@ -299,22 +280,4 @@ public class CalendarScreen
 		document.close();
 
 	}
-	
-//	public void createImage() {
-//
-//	    int w = cal.getWidth();
-//	    int h = cal.getHeight();
-//	    BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-//	    Graphics2D g = bi.createGraphics();
-//	    cal.paint(g);
-//	    g.dispose();
-//	    
-//	    Document document = new Document(PageSize.A4, 20, 20, 20, 20);
-//	    PdfWriter.getInstance(document, new FileOutputStream("./Calendário.pdf"));
-//	    document.open();
-////	    Image image = Image.getInstance(getClass().getResource("/logo.png"));
-//	    document.add(bi);
-//	    document.close();
-//	    
-//	}
 }
