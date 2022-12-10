@@ -9,6 +9,9 @@ public class MenuScreen
 {
     JFrame frm;
 
+    /**
+     * Método para criar a GUI do Menu
+     */
     public void showMenu() {
         frm = Main.getFrm();
         frm.getContentPane().removeAll();
