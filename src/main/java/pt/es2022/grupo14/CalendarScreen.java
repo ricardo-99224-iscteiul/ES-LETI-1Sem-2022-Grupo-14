@@ -9,6 +9,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -100,7 +102,11 @@ public class CalendarScreen
 		});
 
 		JButton toEmail = new JButton("EMAIL");
-		toEmail.addActionListener(e -> cal.prevMonth());
+		toEmail.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new SendEmail();
+			}
+		});
 
 		try
 		{
