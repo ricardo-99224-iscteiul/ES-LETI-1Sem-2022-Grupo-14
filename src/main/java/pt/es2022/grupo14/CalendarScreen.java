@@ -100,6 +100,9 @@ public class CalendarScreen
 				e1.printStackTrace();
 			}
 		});
+		
+		JButton disponibilityBtn = new JButton("DISPONIBILITY");
+		disponibilityBtn.addActionListener(e -> cal.prevMonth());
 
 		JButton toEmail = new JButton("EMAIL");
 		toEmail.addActionListener(new ActionListener() {
@@ -179,6 +182,7 @@ public class CalendarScreen
 		weekControls.add(mode);
 
 		convertControls.add(toPdf);
+		convertControls.add(disponibilityBtn);
 		convertControls.add(toEmail);
 
 		frm.add(weekControls, BorderLayout.NORTH);
