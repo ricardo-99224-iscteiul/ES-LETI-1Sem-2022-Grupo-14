@@ -76,6 +76,15 @@ public class CalendarEvent {
     }
 
     /**
+     * Muda o texto do evento
+     * @param newText é a nova descrição do evento
+     */
+    public void setText(String newText) {
+        if (newText == null) throw new IllegalArgumentException("Text cannot be null");
+        text = newText;
+    }
+
+    /**
      * @return da cor do evento
      */
     public Color getColor() {
