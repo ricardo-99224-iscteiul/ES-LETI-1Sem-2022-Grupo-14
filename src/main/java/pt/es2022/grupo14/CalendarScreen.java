@@ -16,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,6 +31,7 @@ public class CalendarScreen
 	ArrayList<CalendarEvent> events = new ArrayList<>();
 	HashMap<String, Boolean> checkboxes = new HashMap<>();
 	WeekCalendar cal = null;
+	boolean availabilityMode = false;
 	
 	/**
 	 * Método para criar a GUI do calendário
@@ -66,31 +69,71 @@ public class CalendarScreen
 			b.addItemListener(itemEvent ->
 			{
 				checkboxes.put(b.getText(), b.isSelected());
-				updateEvents();
+				if (availabilityMode)
+					updateEventsAvailability();
+				else
+					updateEvents();
 				cal.setEvents(events);
 			});
 
 			calControls.add(b, gbc);
 		}
 
+		updateCalendarFiles();
 		updateEvents();
 
 		cal = new WeekCalendar(events);
 
 		JButton goToTodayBtn = new JButton("Today");
-		goToTodayBtn.addActionListener(e -> cal.goToToday());
+		goToTodayBtn.addActionListener(e ->
+		{
+			cal.goToToday();
+			if (availabilityMode)
+			{
+				updateEventsAvailability();
+				cal.setEvents(events);
+			}
+		});
 
 		JButton nextWeekBtn = new JButton("Next Week");
-		nextWeekBtn.addActionListener(e -> cal.nextWeek());
+		nextWeekBtn.addActionListener(e -> {
+			cal.nextWeek();
+			if (availabilityMode)
+			{
+				updateEventsAvailability();
+				cal.setEvents(events);
+			}
+		});
 
 		JButton prevWeekBtn = new JButton("Previous Week");
-		prevWeekBtn.addActionListener(e -> cal.prevWeek());
+		prevWeekBtn.addActionListener(e -> {
+			cal.prevWeek();
+			if (availabilityMode)
+			{
+				updateEventsAvailability();
+				cal.setEvents(events);
+			}
+		});
 
 		JButton nextMonthBtn = new JButton("Next Month");
-		nextMonthBtn.addActionListener(e -> cal.nextMonth());
+		nextMonthBtn.addActionListener(e -> {
+			cal.nextMonth();
+			if (availabilityMode)
+			{
+				updateEventsAvailability();
+				cal.setEvents(events);
+			}
+		});
 
 		JButton prevMonthBtn = new JButton("Previous Month");
-		prevMonthBtn.addActionListener(e -> cal.prevMonth());
+		prevMonthBtn.addActionListener(e -> {
+			cal.prevMonth();
+			if (availabilityMode)
+			{
+				updateEventsAvailability();
+				cal.setEvents(events);
+			}
+		});
 
 		JButton toPdf = new JButton("PDF");
 		toPdf.addActionListener(e -> {
@@ -101,15 +144,20 @@ public class CalendarScreen
 			}
 		});
 		
-		JButton disponibilityBtn = new JButton("DISPONIBILITY");
-		disponibilityBtn.addActionListener(e -> cal.prevMonth());
+		JButton availabilityBtn = new JButton("AVAILABILITY");
+		availabilityBtn.addActionListener(e -> {
+
+			availabilityMode = !availabilityMode;
+
+			if (availabilityMode)
+				updateEventsAvailability();
+			else
+				updateEvents();
+			cal.setEvents(events);
+		});
 
 		JButton toEmail = new JButton("EMAIL");
-		toEmail.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				new SendEmail();
-			}
-		});
+		toEmail.addActionListener(arg0 -> new SendEmail());
 
 		try
 		{
@@ -182,7 +230,7 @@ public class CalendarScreen
 		weekControls.add(mode);
 
 		convertControls.add(toPdf);
-		convertControls.add(disponibilityBtn);
+		convertControls.add(availabilityBtn);
 		convertControls.add(toEmail);
 
 		frm.add(weekControls, BorderLayout.NORTH);
@@ -195,6 +243,11 @@ public class CalendarScreen
 
 		frm.revalidate();
 		frm.repaint();
+	}
+
+	private void updateCalendarFiles()
+	{
+
 	}
 
 	/**
@@ -226,7 +279,34 @@ public class CalendarScreen
 				{
 					try
 					{
-						ArrayList<CalendarEvent> additions = changeColor(parser.getAllEvents(username));
+							ArrayList<CalendarEvent> additions = changeColor(parser.getAllEvents(username));
+							addEventsToCal(additions);
+					} catch (IOException e)
+					{
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}
+	}
+
+	public void updateEventsAvailability() {
+		events = new ArrayList<>();
+
+		Utils utils = new Utils();
+		JSONParser parser = new JSONParser();
+
+		ArrayList<String> calendarNames = utils.getCalendars();
+
+		for (String username : calendarNames)
+		{
+			for (String name : checkboxes.keySet())
+			{
+				if (checkboxes.get(name) && name.equals(username))
+				{
+					try
+					{
+						ArrayList<CalendarEvent> additions = changeAvailability(parser.getAllEvents(username));
 						addEventsToCal(additions);
 					} catch (IOException e)
 					{
@@ -235,6 +315,57 @@ public class CalendarScreen
 				}
 			}
 		}
+
+		LocalDate startDate = cal.getDateFromDay(cal.getStartDay());
+		LocalDate endDate = cal.getDateFromDay(cal.getEndDay());
+
+		LocalTime startTime = Calendar.START_TIME;
+		LocalTime endTime = Calendar.END_TIME;
+
+		LocalTime currTime = startTime;
+		boolean consecutive = false;
+
+		CalendarEvent event = null;
+
+		while (startDate.isBefore(endDate) || startDate.isEqual(endDate))
+		{
+			if (!existsEventAt(startDate, currTime))
+			{
+				if (consecutive)
+				{
+					event = new CalendarEvent(startDate, event.getStart(), currTime.plusMinutes(30), "", Utils.AVAILABLE);
+				}
+				else
+				{
+					consecutive = true;
+					event = new CalendarEvent(startDate, currTime, currTime.plusMinutes(30), "", Utils.AVAILABLE);
+				}
+			}
+			else
+			{
+				events.add(event);
+				consecutive = false;
+			}
+
+			if (currTime.equals(endTime))
+			{
+				events.add(event);
+				consecutive = false;
+				startDate = startDate.plusDays(1);
+				currTime = startTime;
+			}
+			else currTime = currTime.plusMinutes(30);
+		}
+	}
+
+	public boolean existsEventAt(LocalDate date, LocalTime time)
+	{
+		for (CalendarEvent event : events)
+			if (event.getDate().isEqual(date))
+				if (event.getStart().equals(time) || (event.getStart().isBefore(time) && event.getEnd().isAfter(time)))
+					return true;
+
+		return false;
 	}
 
 	/**
@@ -261,6 +392,21 @@ public class CalendarScreen
 				events.get(index).setColor(cur);
 			}
 			else additions.add(event);
+		}
+		return additions;
+	}
+
+	public ArrayList<CalendarEvent> changeAvailability(ArrayList<CalendarEvent> newEvents)
+	{
+		if (newEvents == null) throw new IllegalArgumentException("NewEvents cannot be null");
+
+		ArrayList<CalendarEvent> additions = new ArrayList<>();
+		for (CalendarEvent event : newEvents)
+		{
+			event.setColor(Utils.NOT_AVAILABLE);
+			event.setText("");
+
+			additions.add(event);
 		}
 		return additions;
 	}
