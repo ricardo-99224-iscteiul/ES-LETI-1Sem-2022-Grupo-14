@@ -27,7 +27,7 @@ class JSONConverterTest {
 
     @Test
     void createFile() {
-        assertThrows(IllegalArgumentException.class, () -> jsonConverter.createFile(null));
+        assertThrows(IllegalArgumentException.class, () -> jsonConverter.createFile(null, null));
     }
 
     @Test
