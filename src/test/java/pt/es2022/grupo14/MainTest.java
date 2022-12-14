@@ -6,13 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest
 {
-
-    @Test
-    void TestMain()
-    {
-        assertDoesNotThrow(() -> Main.main(new String[]{""}));
-    }
-
     @Test
     void changeScreen()
     {
