@@ -25,7 +25,7 @@ class MenuScreenTest
     void showMenu()
     {
         assertDoesNotThrow(() -> menuScreen.showMenu());
-        Main.darkMode = true;
+        Main.darkMode = false;
         assertDoesNotThrow(() -> menuScreen.showMenu());
     }
 }
