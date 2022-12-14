@@ -70,37 +70,46 @@ public class JSONConverter
         while ((line = bf.readLine()) != null)
         {
             sb.append(line).append("\n");
-            if (!found && line.contains(name) && (exame == line.contains("Exame")))
-            {
-                found = true;
 
-                line = bf.readLine();
-
-                if (!line.contains("DT"))
-                {
-                    sb.append("\t\t\t\"DT\" : [\n").append("\t\t\t\t{\"DTSTART\": \"").append(start).append("\", " +
-                            "\"DTEND\": \"").append(end).append("\"}\n").append("\t\t\t]\n").append("\t\t},\n");
-                }
-                else
-                {
-                    sb.append(line).append("\n");
-                    line = bf.readLine();
-                    while (line.endsWith(","))
-                    {
-                        sb.append(line).append("\n");
-                        line = bf.readLine();
-                    }
-                    sb.append(line).append(",\n");
-                    sb.append("\t\t\t\t{\"DTSTART\": \"").append(start).append("\", " +
-                            "\"DTEND\": \"").append(end).append("\"}\n");
-                }
-            }
+            found = insertDate(name, start, end, line, exame, found, sb, bf);
         }
         bf.close();
 
         FileWriter fw = new FileWriter(jsonFile);
         fw.write(sb.toString());
         fw.close();
+    }
+
+    public boolean insertDate(String name, String start, String end, String line, boolean exame, boolean found, StringBuilder sb, BufferedReader bf) throws IOException
+    {
+        if (!found && line.contains(name) && (exame == line.contains("Exame")))
+        {
+
+            line = bf.readLine();
+
+            if (!line.contains("DT"))
+            {
+                sb.append("\t\t\t\"DT\" : [\n").append("\t\t\t\t{\"DTSTART\": \"").append(start).append("\", " +
+                        "\"DTEND\": \"").append(end).append("\"}\n").append("\t\t\t]\n").append("\t\t},\n");
+            }
+            else
+            {
+                sb.append(line).append("\n");
+                line = bf.readLine();
+                while (line.endsWith(","))
+                {
+                    sb.append(line).append("\n");
+                    line = bf.readLine();
+                }
+                sb.append(line).append(",\n");
+                sb.append("\t\t\t\t{\"DTSTART\": \"").append(start).append("\", " +
+                        "\"DTEND\": \"").append(end).append("\"}\n");
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
