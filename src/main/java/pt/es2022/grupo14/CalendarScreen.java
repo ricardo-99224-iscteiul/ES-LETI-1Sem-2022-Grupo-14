@@ -245,9 +245,24 @@ public class CalendarScreen
 		frm.repaint();
 	}
 
+
+	/**
+	 * Atualiza todos os calendarios
+	 */
 	private void updateCalendarFiles()
 	{
-
+		ArrayList<String> jsonNames = new Utils().getCalendars();
+		JSONParser parser = new JSONParser();
+		for (String name : jsonNames)
+		{
+			try
+			{
+				parser.updateJSONFile(name);
+			} catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	/**
