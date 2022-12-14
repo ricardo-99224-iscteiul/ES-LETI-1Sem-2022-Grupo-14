@@ -44,8 +44,6 @@ public class JSONParser
 
         json = sb.toString();
 
-        //EventAdder eventAdder = new EventAdder();
-
         JSONObject obj = new JSONObject(json);
 
         JSONArray jsonArray = obj.getJSONArray("Cadeiras");
@@ -79,11 +77,46 @@ public class JSONParser
                 events.add(new CalendarEvent(LocalDate.of(year, month, day),
                         LocalTime.of(startTimeHour, startTimeMin),
                         LocalTime.of(endTimeHour, endTimeMin),
-                        name,
+                        "",
                         Utils.LIGHT_COLOR));
             }
         }
 
         return events;
+    }
+
+    /**
+     * Atualiza o ficheiro json a partir do url
+     * @param username é o nome do ficheiro
+     * @throws IOException
+     */
+    public void updateJSONFile(String username) throws IOException
+    {
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
+
+        ArrayList<CalendarEvent> events = new ArrayList<>();
+        Path webcalPath = Paths.get(Utils.CALENDARS + username + ".json");
+        File jsonFile = new File(webcalPath.toUri());
+
+        String json;
+
+        BufferedReader bf = new BufferedReader(new FileReader(jsonFile));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = bf.readLine()) != null)
+        {
+            sb.append(line).append(" ");
+        }
+        bf.close();
+
+        json = sb.toString();
+
+        JSONObject obj = new JSONObject(json);
+
+        String webcal = obj.getString("URL");
+
+        CalendarReader reader = new CalendarReader();
+
+        reader.read(webcal);
     }
 }
