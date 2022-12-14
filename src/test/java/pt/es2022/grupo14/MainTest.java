@@ -8,8 +8,16 @@ class MainTest
 {
 
     @Test
+    void TestMain()
+    {
+        assertDoesNotThrow(() -> Main.main(new String[]{""}));
+    }
+
+    @Test
     void changeScreen()
     {
         assertThrows(IllegalArgumentException.class, () -> Main.changeScreen(null));
+        assertDoesNotThrow(() -> Main.changeScreen(Screen.CALENDAR));
+        assertDoesNotThrow(() -> Main.changeScreen(Screen.MENU));
     }
 }
