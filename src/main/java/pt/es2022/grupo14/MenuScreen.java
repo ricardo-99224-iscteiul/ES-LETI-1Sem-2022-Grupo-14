@@ -2,6 +2,7 @@ package pt.es2022.grupo14;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.regex.Pattern;
 
 import static pt.es2022.grupo14.Utils.alphaGray;
 
@@ -36,7 +37,14 @@ public class MenuScreen
         JButton webcalConfirm = new JButton("Enter");
         webcalConfirm.addActionListener(e ->
         {
-            if (webcalTextField.getText().isBlank()) return;
+            if ((!webcalTextField.getText().contains("webcal://")
+                    && !webcalTextField.getText().contains("https://"))
+                    || !webcalTextField.getText().contains("username=")
+                    || !webcalTextField.getText().contains("@"))
+            {
+                Main.changeScreen(Screen.CALENDAR);
+                return;
+            }
 
             try
             {
