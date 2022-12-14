@@ -291,7 +291,11 @@ public class CalendarScreen
 				{
 					try
 					{
-						ArrayList<CalendarEvent> additions = changeAvailability(parser.getAllEvents(username));
+						ArrayList<CalendarEvent> additions;
+						if (availabilityMode)
+							additions = changeAvailability(parser.getAllEvents(username));
+						else
+							additions = changeColor(parser.getAllEvents(username));
 						addEventsToCal(additions);
 					} catch (IOException e)
 					{
