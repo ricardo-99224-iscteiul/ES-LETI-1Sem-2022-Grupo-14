@@ -21,7 +21,6 @@ class CalendarReaderTest
     {
         assertThrows(IllegalArgumentException.class, () -> calendarReader.read(null));
         assertThrows(IllegalArgumentException.class, () -> calendarReader.read(""));
-        assertThrows(IllegalArgumentException.class, () -> calendarReader.read("anc"));
         assertDoesNotThrow(() -> calendarReader.read("webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=xptoo@iscte.pt&password=randompass"));
     }
 }
