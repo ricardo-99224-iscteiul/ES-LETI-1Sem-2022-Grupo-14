@@ -291,8 +291,8 @@ public class CalendarScreen
 				{
 					try
 					{
-							ArrayList<CalendarEvent> additions = changeColor(parser.getAllEvents(username));
-							addEventsToCal(additions);
+						ArrayList<CalendarEvent> additions = changeAvailability(parser.getAllEvents(username));
+						addEventsToCal(additions);
 					} catch (IOException e)
 					{
 						throw new RuntimeException(e);
@@ -306,30 +306,8 @@ public class CalendarScreen
 	 * Dá update à disponibilidade dos eventos
 	 */
 	public void updateEventsAvailability() {
-		events = new ArrayList<>();
 
-		Utils utils = new Utils();
-		JSONParser parser = new JSONParser();
-
-		ArrayList<String> calendarNames = utils.getCalendars();
-
-		for (String username : calendarNames)
-		{
-			for (String name : checkboxes.keySet())
-			{
-				if (checkboxes.get(name) && name.equals(username))
-				{
-					try
-					{
-						ArrayList<CalendarEvent> additions = changeAvailability(parser.getAllEvents(username));
-						addEventsToCal(additions);
-					} catch (IOException e)
-					{
-						throw new RuntimeException(e);
-					}
-				}
-			}
-		}
+		updateEvents();
 
 		LocalDate startDate = cal.getDateFromDay(cal.getStartDay());
 		LocalDate endDate = cal.getDateFromDay(cal.getEndDay());
