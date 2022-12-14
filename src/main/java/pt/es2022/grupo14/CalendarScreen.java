@@ -302,6 +302,9 @@ public class CalendarScreen
 		}
 	}
 
+	/**
+	 * Dá update à disponibilidade dos eventos
+	 */
 	public void updateEventsAvailability() {
 		events = new ArrayList<>();
 
@@ -370,6 +373,12 @@ public class CalendarScreen
 		}
 	}
 
+	/**
+	 * Verificar se existe um evento naquele slot
+	 * @param date é uma data
+	 * @param time é um tempo
+	 * @return verdadeiro caso exista um evento nesta data e tempo
+	 */
 	public boolean existsEventAt(LocalDate date, LocalTime time)
 	{
 		for (CalendarEvent event : events)
@@ -383,7 +392,7 @@ public class CalendarScreen
 	/**
 	 * Muda a cor dos eventos
 	 * @param newEvents é uma lista de eventos
-	 * @return da lista dos eventos com a cor alterada
+	 * @return da lista dos eventos que não estão na lista
 	 */
 	public ArrayList<CalendarEvent> changeColor(ArrayList<CalendarEvent> newEvents)
 	{
@@ -408,6 +417,11 @@ public class CalendarScreen
 		return additions;
 	}
 
+	/**
+	 *  Muda a disponinilidade dos eventos
+	 * @param newEvents é uma lista de eventos
+	 * @return dos eventos que não estão na lista
+	 */
 	public ArrayList<CalendarEvent> changeAvailability(ArrayList<CalendarEvent> newEvents)
 	{
 		if (newEvents == null) throw new IllegalArgumentException("NewEvents cannot be null");
