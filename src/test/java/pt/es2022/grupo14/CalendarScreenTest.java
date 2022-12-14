@@ -12,11 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class CalendarScreenTest
 {
     CalendarScreen calendarScreen;
+    CalendarEvent event;
 
     @BeforeEach
     void setUp()
     {
         calendarScreen = new CalendarScreen();
+        event = new CalendarEvent(
+                LocalDate.now(),
+                LocalTime.of(13, 0),
+                LocalTime.of(14, 0),
+                ""
+        );
     }
 
     @Test
@@ -59,7 +66,18 @@ class CalendarScreenTest
     @Test
     void existsEventsAt()
     {
-        assertDoesNotThrow(() -> calendarScreen.existsEventAt(LocalDate.now(), LocalTime.now()));
+        assertFalse(() -> calendarScreen.existsEventAt(LocalDate.now(), LocalTime.of(13, 0)));
+        ArrayList<CalendarEvent> events = new ArrayList<>();
+        events.add(
+                new CalendarEvent(
+                        LocalDate.now(),
+                        LocalTime.of(13, 0),
+                        LocalTime.of(15, 0),
+                        ""
+                )
+        );
+        calendarScreen.addEventsToCal(events);
+        assertTrue(() -> calendarScreen.existsEventAt(LocalDate.now(), LocalTime.of(13, 0)));
     }
 
     @Test
@@ -78,5 +96,22 @@ class CalendarScreenTest
         assertEquals(events, calendarScreen.changeColor(events));
         assertDoesNotThrow(() -> calendarScreen.changeColor(events));
         assertDoesNotThrow(() -> calendarScreen.changeColor(events));
+    }
+
+    @Test
+    void changeAvailability()
+    {
+        assertThrows(IllegalArgumentException.class, () -> calendarScreen.changeAvailability(null));
+        ArrayList<CalendarEvent> events = new ArrayList<>();
+        events.add(event);
+
+        assertDoesNotThrow(() -> calendarScreen.changeAvailability(events));
+    }
+
+    @Test
+    void createPDF()
+    {
+        calendarScreen.showCalendar();
+        assertDoesNotThrow(() -> calendarScreen.createPdf());
     }
 }
