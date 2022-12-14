@@ -9,9 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class MenuScreenTest
 {
 
+    MenuScreen menuScreen;
     @BeforeEach
     void setUp()
     {
+        menuScreen = new MenuScreen();
     }
 
     @AfterEach
@@ -22,5 +24,6 @@ class MenuScreenTest
     @Test
     void showMenu()
     {
+        assertDoesNotThrow(() -> menuScreen.showMenu());
     }
 }
