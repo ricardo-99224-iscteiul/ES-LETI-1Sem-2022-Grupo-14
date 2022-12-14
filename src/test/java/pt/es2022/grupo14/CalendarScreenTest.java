@@ -85,12 +85,6 @@ class CalendarScreenTest
     {
         assertThrows(IllegalArgumentException.class, () -> calendarScreen.changeColor(null));
         ArrayList<CalendarEvent> events = new ArrayList<>();
-        CalendarEvent event = new CalendarEvent(
-                LocalDate.now(),
-                LocalTime.of(13, 0),
-                LocalTime.of(14, 0),
-                ""
-        );
         events.add(event);
 
         assertEquals(events, calendarScreen.changeColor(events));
