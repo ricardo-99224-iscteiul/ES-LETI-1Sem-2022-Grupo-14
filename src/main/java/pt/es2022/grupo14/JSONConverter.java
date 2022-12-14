@@ -59,7 +59,7 @@ public class JSONConverter
         Path webcalPath = Paths.get("src/calendars/" + username + ".json");
         File jsonFile = new File(webcalPath.toUri());
 
-        BufferedReader bf = new BufferedReader(new FileReader(jsonFile));
+        BufferedReader br = new BufferedReader(new FileReader(jsonFile));
         StringBuilder sb = new StringBuilder();
         String line;
 
@@ -67,25 +67,37 @@ public class JSONConverter
 
         boolean found = false;
 
-        while ((line = bf.readLine()) != null)
+        while ((line = br.readLine()) != null)
         {
             sb.append(line).append("\n");
 
-            found = insertDate(name, start, end, line, exame, found, sb, bf);
+            found = insertDate(name, start, end, line, exame, found, sb, br);
         }
-        bf.close();
+        br.close();
 
         FileWriter fw = new FileWriter(jsonFile);
         fw.write(sb.toString());
         fw.close();
     }
 
-    public boolean insertDate(String name, String start, String end, String line, boolean exame, boolean found, StringBuilder sb, BufferedReader bf) throws IOException
+    /**
+     * @param name é o nome do evento
+     * @param start é a data de início do evento
+     * @param end é a data de fim do evento
+     * @param line é a linha que está a ser lida
+     * @param exame indentifica se é exame
+     * @param found indica se foi encontrado o nome do evento
+     * @param sb é o StringBuilder
+     * @param br é o BufferedReader
+     * @return true caso tenha sido encontrado o nome do evento
+     * @throws IOException
+     */
+    public boolean insertDate(String name, String start, String end, String line, boolean exame, boolean found, StringBuilder sb, BufferedReader br) throws IOException
     {
         if (!found && line.contains(name) && (exame == line.contains("Exame")))
         {
 
-            line = bf.readLine();
+            line = br.readLine();
 
             if (!line.contains("DT"))
             {
@@ -95,11 +107,11 @@ public class JSONConverter
             else
             {
                 sb.append(line).append("\n");
-                line = bf.readLine();
+                line = br.readLine();
                 while (line.endsWith(","))
                 {
                     sb.append(line).append("\n");
-                    line = bf.readLine();
+                    line = br.readLine();
                 }
                 sb.append(line).append(",\n");
                 sb.append("\t\t\t\t{\"DTSTART\": \"").append(start).append("\", " +
