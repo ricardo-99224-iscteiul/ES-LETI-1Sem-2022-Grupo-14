@@ -35,11 +35,16 @@ class CalendarScreenTest
     void addEventsToCal()
     {
         assertThrows(IllegalArgumentException.class, () -> calendarScreen.addEventsToCal(null));
+        ArrayList<CalendarEvent> events = new ArrayList<>();
+        events.add(event);
+        assertDoesNotThrow(() -> calendarScreen.addEventsToCal(events));
+        assertEquals(events, calendarScreen.events);
     }
 
     @Test
     void updateEvents()
     {
+        calendarScreen.checkboxes.put("rdlpo", true);
         assertDoesNotThrow(() -> calendarScreen.updateEvents());
     }
 
@@ -47,6 +52,7 @@ class CalendarScreenTest
     void updateEventsAvailability()
     {
         calendarScreen.showCalendar();
+        calendarScreen.checkboxes.put("rdlpo", true);
         assertDoesNotThrow(() -> calendarScreen.updateEventsAvailability());
     }
 
@@ -70,5 +76,7 @@ class CalendarScreenTest
         events.add(event);
 
         assertEquals(events, calendarScreen.changeColor(events));
+        assertDoesNotThrow(() -> calendarScreen.changeColor(events));
+        assertDoesNotThrow(() -> calendarScreen.changeColor(events));
     }
 }
