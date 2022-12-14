@@ -78,12 +78,11 @@ public class SendEmail extends JFrame {
         JPanel footerPanel = new JPanel();
         footerPanel.setLayout(new BorderLayout());
         JButton sendMailButton = new JButton("Send");
-        sendMailButton.addActionListener(new SendEmailActionListener());
-//        sendMailButton.addActionListener(e -> {
-//        	new SendEmailActionListener();
-//        	this.dispose();
-//        });
-
+        sendMailButton.addActionListener(e -> {
+        	new SendEmailActionListener();
+        	this.dispose();
+        });
+        
         footerPanel.add(sendMailButton, BorderLayout.SOUTH);
 
         getContentPane().add(headerPanel, BorderLayout.NORTH);
@@ -94,12 +93,12 @@ public class SendEmail extends JFrame {
     /**
      * Envia o e-mail tendo em conta a escolha de servidor de envio
      */
-    private class SendEmailActionListener implements ActionListener {
+    private class SendEmailActionListener {
         SendEmailActionListener() {
+        	send();
         }
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
+        public void send() {
             Properties props = new Properties();
             props.put("mail.smtp.host", mailSmtpHostComboBox.getSelectedItem());
             props.put("mail.transport.protocol", "smtp");
