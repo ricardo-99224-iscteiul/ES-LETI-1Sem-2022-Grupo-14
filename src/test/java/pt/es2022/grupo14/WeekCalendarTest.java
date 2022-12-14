@@ -1,6 +1,5 @@
 package pt.es2022.grupo14;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -72,5 +71,36 @@ class WeekCalendarTest
     void dayToPixel()
     {
         assertThrows(IllegalArgumentException.class, () -> weekCalendar.dayToPixel(null));
+        assertDoesNotThrow(() -> weekCalendar.dayToPixel(DayOfWeek.MONDAY));
+    }
+
+    @Test
+    void setRangeToToday()
+    {
+        assertDoesNotThrow(() -> weekCalendar.setRangeToToday());
+    }
+
+    @Test
+    void nextWeek()
+    {
+        assertDoesNotThrow(() -> weekCalendar.nextWeek());
+    }
+
+    @Test
+    void prevWeek()
+    {
+        assertDoesNotThrow(() -> weekCalendar.prevWeek());
+    }
+
+    @Test
+    void nextMonth()
+    {
+        assertDoesNotThrow(() -> weekCalendar.nextMonth());
+    }
+
+    @Test
+    void prevMonth()
+    {
+        assertDoesNotThrow(() -> weekCalendar.prevMonth());
     }
 }
