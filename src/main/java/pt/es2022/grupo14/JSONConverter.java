@@ -108,7 +108,7 @@ public class JSONConverter
      * @param username é o nome do ficheiro
      * @throws IOException
      */
-    public void createFile(String username) throws IOException
+    public void createFile(String username, String webcal) throws IOException
     {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Username cannot be null or empty");
 
@@ -122,14 +122,14 @@ public class JSONConverter
 
         FileWriter fw = new FileWriter(jsonFile, true);
 
-        fw.write("{\n\t\"Cadeiras\" : [\n");
+        fw.write("{\n\t\"URL\" : \"" + webcal + "\",\n\t\"Cadeiras\" : [\n");
 
         fw.close();
 
     }
 
     /**
-     * Método que acabao ficheiro JSON
+     * Método que acaba o ficheiro JSON
      * @param username é o nome do ficheiro
      * @throws IOException
      */
@@ -142,7 +142,7 @@ public class JSONConverter
 
         BufferedReader bf = new BufferedReader(new FileReader(jsonFile));
         StringBuilder sb = new StringBuilder();
-        String line, last = "";
+        String line;
 
         while ((line = bf.readLine()) != null)
         {
