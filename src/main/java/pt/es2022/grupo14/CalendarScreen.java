@@ -320,38 +320,24 @@ public class CalendarScreen
 		LocalTime endTime = Calendar.END_TIME;
 
 		LocalTime currTime = startTime;
-		boolean consecutive = false;
 
-		CalendarEvent event = null;
+		CalendarEvent event;
 
 		while (startDate.isBefore(endDate) || startDate.isEqual(endDate))
 		{
 			if (!existsEventAt(startDate, currTime))
 			{
-				if (consecutive)
-				{
-					event = new CalendarEvent(startDate, event.getStart(), currTime.plusMinutes(30), "", Utils.AVAILABLE);
-				}
-				else
-				{
-					consecutive = true;
-					event = new CalendarEvent(startDate, currTime, currTime.plusMinutes(30), "", Utils.AVAILABLE);
-				}
-			}
-			else
-			{
+				event = new CalendarEvent(startDate, currTime, currTime.plusMinutes(30), "", Utils.AVAILABLE);
 				events.add(event);
-				consecutive = false;
 			}
+
+			currTime = currTime.plusMinutes(30);
 
 			if (currTime.equals(endTime))
 			{
-				events.add(event);
-				consecutive = false;
 				startDate = startDate.plusDays(1);
 				currTime = startTime;
 			}
-			else currTime = currTime.plusMinutes(30);
 		}
 	}
 
