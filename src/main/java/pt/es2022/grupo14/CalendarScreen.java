@@ -416,13 +416,11 @@ public class CalendarScreen
 		int height = cal.getHeight();
 		Document document = new Document(new com.itextpdf.text.Rectangle(width, height));
 		try {
-			PdfWriter writer;
-			writer = PdfWriter.getInstance(document, new FileOutputStream("./Calendário.pdf"));
+			PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("./Calendário.pdf"));
 			document.open();
 			PdfContentByte cb = writer.getDirectContent();
 			PdfTemplate tp = cb.createTemplate(width, height);
-			Graphics2D g2;
-			g2 = tp.createGraphics(width, height);
+			Graphics2D g2 = tp.createGraphics(width, height);
 			cal.print(g2);
 			g2.dispose();
 			cb.addTemplate(tp, 0, 0);
