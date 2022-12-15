@@ -68,15 +68,18 @@ public class JSONParser
                 int endTimeHour = Integer.parseInt(end.substring(8, 10));
                 int endTimeMin = Integer.parseInt(end.substring(10, 12));
 
+                LocalTime startTime = LocalTime.of(startTimeHour, startTimeMin);
+                LocalTime endTime = LocalTime.of(endTimeHour, endTimeMin);
+
                 if (TimeZone.getTimeZone( "Europe/Lisbon").inDaylightTime( new Date(year - 1900, month - 1, day) ))
                 {
-                    startTimeHour += 1;
-                    endTimeHour += 1;
+                    startTime = startTime.plusHours(1);
+                    endTime = endTime.plusHours(1);
                 }
 
                 events.add(new CalendarEvent(LocalDate.of(year, month, day),
-                        LocalTime.of(startTimeHour, startTimeMin),
-                        LocalTime.of(endTimeHour, endTimeMin),
+                        startTime,
+                        endTime,
                         "",
                         Utils.LIGHT_COLOR));
             }
