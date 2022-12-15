@@ -231,14 +231,11 @@ public abstract class Calendar extends JComponent {
      * Preenche as slots de tempo com eventos
      */
     private void drawEvents() {
-        double x;
-        double y0;
-
         for (CalendarEvent event : events) {
             if (!dateInRange(event.getDate())) continue;
 
-            x = dayToPixel(event.getDate().getDayOfWeek());
-            y0 = timeToPixel(event.getStart());
+            double x = dayToPixel(event.getDate().getDayOfWeek());
+            double y0 = timeToPixel(event.getStart());
 
             Rectangle2D rect = new Rectangle2D.Double(x, y0, dayWidth, (timeToPixel(event.getEnd()) - timeToPixel(event.getStart())));
             Color origColor = g2.getColor();
