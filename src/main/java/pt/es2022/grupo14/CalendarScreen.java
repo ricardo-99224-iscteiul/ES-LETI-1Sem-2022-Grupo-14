@@ -5,6 +5,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Rectangle;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -320,24 +321,38 @@ public class CalendarScreen
 		LocalTime endTime = Calendar.END_TIME;
 
 		LocalTime currTime = startTime;
+		boolean consecutive = false;
 
-		CalendarEvent event;
+		CalendarEvent event = null;
 
 		while (startDate.isBefore(endDate) || startDate.isEqual(endDate))
 		{
 			if (!existsEventAt(startDate, currTime))
 			{
-				event = new CalendarEvent(startDate, currTime, currTime.plusMinutes(30), "", Utils.AVAILABLE);
-				events.add(event);
+				if (consecutive)
+				{
+					event = new CalendarEvent(startDate, event.getStart(), currTime.plusMinutes(30), "", Utils.AVAILABLE);
+				}
+				else
+				{
+					consecutive = true;
+					event = new CalendarEvent(startDate, currTime, currTime.plusMinutes(30), "", Utils.AVAILABLE);
+				}
 			}
-
-			currTime = currTime.plusMinutes(30);
+			else
+			{
+				events.add(event);
+				consecutive = false;
+			}
 
 			if (currTime.equals(endTime))
 			{
+				events.add(event);
+				consecutive = false;
 				startDate = startDate.plusDays(1);
 				currTime = startTime;
 			}
+			else currTime = currTime.plusMinutes(30);
 		}
 	}
 
@@ -414,7 +429,7 @@ public class CalendarScreen
 	public void createPdf() throws IOException, DocumentException {
 		int width = cal.getWidth();
 		int height = cal.getHeight();
-		Document document = new Document(new com.itextpdf.text.Rectangle(width, height));
+		Document document = new Document(new Rectangle(width, height));
 		try {
 			PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("./Calendário.pdf"));
 			document.open();
